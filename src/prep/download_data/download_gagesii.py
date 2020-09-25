@@ -58,6 +58,6 @@ def download_one_zip(data_url, data_dir):
         unzip_nested_zip(zipfile_path, unzip_dir), download_small_file
 
 
-if not os.path.isdir(cfg_prep.GAGES_PATH):
+if not os.path.isdir(cfg_prep.GAGES.GAGES_PATH):
     os.makedirs(cfg_prep.GAGES_PATH)
 [download_one_zip(attr_url, cfg_prep.GAGES.GAGES_PATH) for attr_url in cfg_prep.GAGES.attrUrl]

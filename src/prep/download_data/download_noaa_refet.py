@@ -46,7 +46,7 @@ def main(overwrite_flag=False):
     if os.path.isdir(noaa_path) and (overwrite_flag or size_flag):
         os.remove(noaa_path)
 
-    if not os.path.isfile(noaa_path):
+    if not os.path.isdir(noaa_path):
         logging.info('  Download NOAA RefET files')
         logging.debug(one_year_url)
         logging.debug(noaa_path)

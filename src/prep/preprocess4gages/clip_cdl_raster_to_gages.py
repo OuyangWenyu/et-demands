@@ -1,5 +1,5 @@
 # --------------------------------
-# Name:         clip_cdl_raster.py
+# Name:         clip_cdl_raster_to_gages.py
 # Purpose:      Clip CDL rasters to the ET zones extent (GAGES-II region)
 # --------------------------------
 
@@ -115,13 +115,14 @@ def main(overwrite_flag=False):
     zones_extent = gdc.feature_lyr_extent(zones_lyr)
     zones_ds = None
     logging.debug('\nET Zones Shapefile Properties')
+    # TODO: when debugging always unexpectedly stop, I think the reason is that raster data so large that out of memory
     logging.debug('  Extent:     {}'.format(zones_extent))
     logging.debug('  Projection: {}'.format(zones_osr.ExportToWkt()))
     # logging.debug('  OSR:    {}'.format(zones_osr))
 
     # Subset/clip properties
     # Project the extent to the CDL spatial reference
-    logging.debug('\nCDL Output Raster Properties')
+    logging.info('\nCDL Output Raster Properties')
     clip_extent = zones_extent.project(zones_osr, cdl_osr)
     logging.debug('  Projected:  {}'.format(clip_extent))
     # Adjust the clip extent to the CDL snap point and cell size
@@ -139,11 +140,9 @@ def main(overwrite_flag=False):
     if os.path.isfile(cdl_output_path) or overwrite_flag:
         logging.info('\nDeleting existing raster')
         logging.debug('  {}'.format(cdl_output_path))
-        # subprocess.run(
         subprocess.check_output(
             ['gdalmanage', 'delete', '-f', output_format, cdl_output_path],
             shell=shell_flag)
-        # remove_file(cdl_output_path)
 
     # Clip
     if not os.path.isfile(cdl_output_path):

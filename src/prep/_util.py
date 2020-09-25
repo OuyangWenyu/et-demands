@@ -1,7 +1,7 @@
-#--------------------------------
+# --------------------------------
 # Name:         util.py
 # Purpose:      Utility functions for ET-Demands prep scripts
-#--------------------------------
+# --------------------------------
 
 import configparser
 from ftplib import FTP
@@ -10,6 +10,29 @@ from itertools import groupby
 import logging
 import os
 import sys
+
+
+def ftp_download_dir(site_url, site_folder, output_path):
+    """download all files in one folder in the FTP server"""
+    try:
+        ftp = FTP()
+        ftp.connect(site_url)
+        ftp.login()
+        ftp.cwd('{}'.format(site_folder))
+        logging.debug('  Beginning download')
+
+        filenames = ftp.nlst()  # get filenames within the directory
+        for filename in filenames:
+            logging.info('     Download ' + filename)
+            local_filename = os.path.join(output_path, filename)
+            file = open(local_filename, 'wb')
+            ftp.retrbinary('RETR ' + filename, file.write)
+            file.close()
+
+        logging.debug('  Download complete')
+        ftp.quit()  # This is the “polite” way to close a connection
+    except Exception as e:
+        logging.info('  Unhandled exception: {}'.format(e))
 
 
 def ftp_download(site_url, site_folder, file_name, output_path):

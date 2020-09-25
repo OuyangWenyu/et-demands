@@ -47,9 +47,9 @@ def main(overwrite_flag=False):
     clay_url = '{}/{}'.format(base_url, clay_name)
     sand_url = '{}/{}'.format(base_url, sand_name)
 
-    awc_path = config.CROP_ET.awc_path
-    clay_path = config.CROP_ET.clay_path
-    sand_path = config.CROP_ET.sand_path
+    awc_path = config.SOILS.awc_path
+    clay_path = config.SOILS.clay_path
+    sand_path = config.SOILS.sand_path
 
     if not os.path.isdir(os.path.dirname(awc_path)):
         os.makedirs(os.path.dirname(awc_path))

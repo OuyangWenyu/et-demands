@@ -7,7 +7,7 @@ import shutil
 
 from osgeo import gdal, ogr, osr
 
-import _gdal_common as gdc
+import src.prep._gdal_common as gdc
 
 
 def add_field(input_path, name, type, width=None, precision=None):
@@ -473,8 +473,8 @@ def update_cursor(output_path, values):
 
     # Map field names to types
     f_types = {
-        output_defn.GetFieldDefn(i).GetName(): output_defn.GetFieldDefn(i)\
-            .GetFieldTypeName(output_defn.GetFieldDefn(i).GetType())
+        output_defn.GetFieldDefn(i).GetName(): output_defn.GetFieldDefn(i).GetFieldTypeName(
+            output_defn.GetFieldDefn(i).GetType())
         for i in range(output_defn.GetFieldCount())}
 
     for output_ftr in output_lyr:

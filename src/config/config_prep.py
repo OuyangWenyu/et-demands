@@ -8,11 +8,11 @@ __C = edict()
 cfg_prep = __C
 # Project directory
 __C.CODE_ROOT_DIR = os.path.join(definition.ROOT_DIR, "src")
-__C.DATA_ROOT_DIR = os.path.join(definition.ROOT_DIR, "examples", "gages")
+__C.DATA_ROOT_DIR = os.path.join(definition.ROOT_DIR, "examples")
 
 # USDA CDL directory
 __C.USDA = edict()
-__C.USDA.cdl_folder = os.path.join(__C.DATA_ROOT_DIR, 'gis', "usda")
+__C.USDA.cdl_folder = os.path.join(__C.DATA_ROOT_DIR, 'common', "usda_cdl")
 __C.USDA.cdl_year = 2008
 __C.USDA.cdl_format = "{}_30m_cdls.{}"
 __C.USDA.usda_site_url = 'ftp.nass.usda.gov'
@@ -31,7 +31,7 @@ __C.GAGES.attrUrl = ["https://water.usgs.gov/GIS/dsdl/basinchar_and_report_sept_
                      "https://water.usgs.gov/GIS/dsdl/boundaries_shapefiles_by_aggeco.zip",
                      "https://www.sciencebase.gov/catalog/file/get/59692a64e4b0d1f9f05fbd39"]
 # region shapefiles
-__C.GAGES.GAGES_PATH = os.path.join(__C.DATA_ROOT_DIR, 'gis', "gagesii")
+__C.GAGES.GAGES_PATH = os.path.join(__C.DATA_ROOT_DIR, 'common', "gagesii")
 __C.GAGES.gage_region_dir = os.path.join(__C.GAGES.GAGES_PATH, 'boundaries_shapefiles_by_aggeco',
                                          'boundaries-shapefiles-by-aggeco')
 # point shapefile
@@ -47,17 +47,32 @@ __C.NOAA = edict()
 __C.NOAA.noaa_site_url = 'ftp2.psl.noaa.gov'
 __C.NOAA.noaa_site_folder = 'Projects/RefET/CONUS/Gen-0/data'
 __C.NOAA.noaa_year = 2008
-__C.NOAA.noaa_folder = os.path.join(__C.DATA_ROOT_DIR, 'climate', "noaa_daily_ret")
+__C.NOAA.noaa_folder = os.path.join(__C.DATA_ROOT_DIR, 'common', "noaa_daily_ret")
+
+# Soil data come from et-demands preprocessed STATSGO2
+__C.SOILS = edict()
+__C.SOILS.awc_path = os.path.join(__C.DATA_ROOT_DIR, 'common', 'soils', 'AWC_WTA_0to152cm_statsgo.shp')
+__C.SOILS.clay_path = os.path.join(__C.DATA_ROOT_DIR, 'common', 'soils', 'Clay_WTA_0to152cm_statsgo.shp')
+__C.SOILS.sand_path = os.path.join(__C.DATA_ROOT_DIR, 'common', 'soils', 'Sand_WTA_0to152cm_statsgo.shp')
 
 # CROP ET setting
 __C.CROP_ET = edict()
-__C.CROP_ET.project_folder = __C.DATA_ROOT_DIR
-__C.CROP_ET.gis_folder = os.path.join(__C.DATA_ROOT_DIR, 'gis')
-__C.CROP_ET.crop_path = os.path.join(__C.CROP_ET.gis_folder, 'cdl')
-__C.CROP_ET.awc_path = os.path.join(__C.CROP_ET.gis_folder, 'soils', 'AWC_WTA_0to152cm_statsgo.shp')
-__C.CROP_ET.clay_path = os.path.join(__C.CROP_ET.gis_folder, 'soils', 'Clay_WTA_0to152cm_statsgo.shp')
-__C.CROP_ET.sand_path = os.path.join(__C.CROP_ET.gis_folder, 'soils', 'Sand_WTA_0to152cm_statsgo.shp')
-
-__C.CROP_ET.cells_path = os.path.join(__C.GAGES.gage_region_dir, 'bas_nonref_MxWdShld.shp')
-# stations_path = os.path.join(definition.ROOT_DIR,"testing","data","gis","stations","gridmet_huc8_stations.shp")
+# __C.CROP_ET.region_name = "bas_nonref_MxWdShld"
+# __C.CROP_ET.region_shpfile_dir = __C.GAGES.gage_region_dir
+__C.CROP_ET.region_name = "some_from_mxwdshld"
+__C.CROP_ET.region_shpfile_dir = os.path.join(__C.DATA_ROOT_DIR, __C.CROP_ET.region_name)
+__C.CROP_ET.cells_path = os.path.join(__C.CROP_ET.region_shpfile_dir, __C.CROP_ET.region_name + '.shp')
+__C.CROP_ET.project_folder = os.path.join(__C.DATA_ROOT_DIR, __C.CROP_ET.region_name)
+__C.CROP_ET.gis_folder = os.path.join(__C.CROP_ET.project_folder, 'gis')
+__C.CROP_ET.crop_path = os.path.join(__C.CROP_ET.gis_folder, 'cdl_crops.shp')
 __C.CROP_ET.crop_field = "CDL"
+
+# Crosswalk file to map CDL crops to ET-Demands crops
+# Crosswalk field names are hardcoded in the et_demands_zonal_stats.py
+__C.CROP_ET.crosswalk_path = os.path.join(__C.CODE_ROOT_DIR, "prep", "cdl_crosswalk_default.csv")
+__C.CROP_ET.soil_crop_mask_flag = True
+__C.CROP_ET.save_crop_mask_flag = True
+
+## ET-Demands folder
+__C.CROP_ET.crop_et_folder = os.path.join(__C.CODE_ROOT_DIR, "cropET")
+# __C.CROP_ET.stations_path = os.path.join(definition.ROOT_DIR,"testing","data","gis","stations","gridmet_huc8_stations.shp")
