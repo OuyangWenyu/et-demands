@@ -483,7 +483,7 @@ class CropETData:
 
         if os.path.isdir(self.refet['ws']):
             pass
-        elif (not os.path.isdir(self.refet['ws']) and os.path.isdir(os.path.join(self.project_ws, self.refet['ws']))):
+        elif not os.path.isdir(self.refet['ws']) and os.path.isdir(os.path.join(self.project_ws, self.refet['ws'])):
             self.refet['ws'] = os.path.join(self.project_ws, self.refet['ws'])
         else:
             logging.error('ERROR:refet folder {} does not exist'.format(self.refet['ws']))
@@ -589,8 +589,8 @@ class CropETData:
         self.weather['file_type'] = 'csv'
         # self.weather['data_structure_type'] = 'SF P'
         self.weather['name_format'] = config.WEATHER.name_format
-        self.weather['header_lines'] = config.getint(weather_sec, 'header_lines')
-        self.weather['names_line'] = config.getint(weather_sec, 'names_line')
+        self.weather['header_lines'] = config.WEATHER.header_lines
+        self.weather['names_line'] = config.WEATHER.names_line
         try:
             self.weather['delimiter'] = config.WEATHER.delimiter
             if self.weather['delimiter'] is None or self.weather['delimiter'] == 'None':
@@ -636,7 +636,7 @@ class CropETData:
         field_list = ['tmin', 'tmax', 'ppt', 'wind']
         for f_name in field_list:
             try:
-                self.weather['fields'][f_name] = config.get(weather_sec, f_name + '_field')
+                self.weather['fields'][f_name] = eval('config.WEATHER.' + f_name + '_field')
             except:
                 logging.error('  ERROR: WEATHER {}_field must be set in INI'.format(f_name))
                 sys.exit()
@@ -647,7 +647,7 @@ class CropETData:
                 continue
             elif self.weather['fields'][f_name] is not None:
                 try:
-                    self.weather['units'][f_name] = config.get(weather_sec, f_name + '_units')
+                    self.weather['units'][f_name] = eval('config.WEATHER.' + f_name + '_units')
                 except:
                     logging.error('  ERROR: WEATHER {}_units must be set in INI'.format(f_name))
                     sys.exit()
@@ -658,7 +658,7 @@ class CropETData:
                 continue
             elif self.weather['fields'][f_name] is not None:
                 try:
-                    self.weather['fnspec'][f_name] = config.get(weather_sec, f_name + '_name')
+                    self.weather['fnspec'][f_name] = eval('config.WEATHER.' + f_name + '_name')
                 except:
                     self.weather['fnspec'][f_name] = f_name
             else:
@@ -711,19 +711,12 @@ class CropETData:
             self.weather['fields'][x] = None
             self.weather['units'][x] = None
             # Check if field exists
-            try:
-                self.weather['fields'][x] = config.WEATHER.x + '_field'
-            except configparser.NoOptionError:
-                logging.info(x + ' field not found in .ini. skipping.')
-                continue
-            # Check if field is None or ''
-            if self.weather['fields'][x] is None or self.weather['fields'][x].lower() in ['', 'None']:
-                logging.info(x + 'field was not set or was set to none')
-                continue
+            if x + '_field' in list(config.WEATHER.keys()):
+                self.weather['fields'][x] = eval('config.WEATHER.' + x + '_field')
             # If field exists check for units
             if self.weather['fields'][x]:
                 try:
-                    self.weather['units'][x] = config.WEATHER.x + '_units'
+                    self.weather['units'][x] = eval('config.WEATHER.' + x + '_units')
                 except configparser.NoOptionError:
                     logging.info(x + ' units not found in .ini. skipping')
                     continue
@@ -746,7 +739,7 @@ class CropETData:
 
         # Wind speeds measured at heights other than 2 meters will be scaled
         try:
-            self.weather['wind_height'] = config.getfloat(weather_sec, 'wind_height')
+            self.weather['wind_height'] = config.WEATHER.wind_height
         except:
             self.weather['wind_height'] = 2
 

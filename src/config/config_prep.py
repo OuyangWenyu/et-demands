@@ -57,6 +57,11 @@ __C.NLDAS.nldas_folder = os.path.join(__C.DATA_ROOT_DIR, 'common', "nldas")
 __C.NLDAS.nldas_grid_shpfile_zip = os.path.join(__C.DATA_ROOT_DIR, 'common', "nldas", "NLDAS_Grid_Reference.zip")
 __C.NLDAS.nldas_grid_shpfile = os.path.join(__C.DATA_ROOT_DIR, 'common', "nldas", "NLDAS_Grid_Reference.shp")
 
+# GRIDMET weather data
+__C.GRIDMET = edict()
+__C.GRIDMET.origin_gridmet_folder = os.path.join(__C.DATA_ROOT_DIR, 'common', "gridmet")
+__C.GRIDMET.origin_gridmet_file_format = "gridmet_%s_mean_%s.csv"
+
 # Soil data come from et-demands preprocessed STATSGO2
 __C.SOILS = edict()
 __C.SOILS.awc_path = os.path.join(__C.DATA_ROOT_DIR, 'common', 'soils', 'AWC_WTA_0to152cm_statsgo.shp')
@@ -83,3 +88,4 @@ __C.CROP_ET.save_crop_mask_flag = True
 
 # ET-Demands folder
 __C.CROP_ET.crop_et_folder = os.path.join(__C.CODE_ROOT_DIR, "cropet4gages")
+__C.CROP_ET.refet_folder = os.path.join(__C.CROP_ET.project_folder, "climate")

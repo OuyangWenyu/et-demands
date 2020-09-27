@@ -22,7 +22,7 @@ __CET.CROP_ET.cells_path = os.path.join(__CET.CROP_ET.region_shpfile_dir, __CET.
 
 ## ET-Demands folder
 __CET.CROP_ET.crop_et_folder = os.path.join(__CET.CODE_ROOT_DIR, "cropet4gages")
-__CET.CROP_ET.template_folder = os.path.join(__CET.CODE_ROOT_DIR, "tatic")
+__CET.CROP_ET.template_folder = os.path.join(__CET.CODE_ROOT_DIR, "static")
 
 ## Crops
 # crop_test_list = 66
@@ -95,18 +95,18 @@ __CET.WEATHER.names_line = 1
 __CET.WEATHER.delimiter = ","
 ## Field names
 __CET.WEATHER.date_field = "date"
-__CET.WEATHER.tmin_field = "tmin_c"
-__CET.WEATHER.tmax_field = "tmax_c"
-__CET.WEATHER.ppt_field = "prcp_mm"
-__CET.WEATHER.rs_field = "srad_wm2"
-__CET.WEATHER.wind_field = "u2_ms"
+__CET.WEATHER.tmin_field = "tmmn"
+__CET.WEATHER.tmax_field = "tmmx"
+__CET.WEATHER.ppt_field = "ppt"
+__CET.WEATHER.rs_field = "srad"
+__CET.WEATHER.wind_field = "vs"
 # Priority (tdew, ea, q)
 # tdew_field =
 __CET.WEATHER.ea_field = "ea_kpa"
 # q_field =
 ## Units
-__CET.WEATHER.tmin_units = "C"
-__CET.WEATHER.tmax_units = "C"
+__CET.WEATHER.tmin_units = "K"
+__CET.WEATHER.tmax_units = "K"
 __CET.WEATHER.ppt_units = "mm"
 __CET.WEATHER.rs_units = "W/m2"
 __CET.WEATHER.wind_units = "m/s"
@@ -114,4 +114,4 @@ __CET.WEATHER.wind_units = "m/s"
 __CET.WEATHER.ea_units = "kpa"
 # q_units = kg/kg
 ## Wind height in meters
-__CET.WEATHER.wind_height = 2
+__CET.WEATHER.wind_height = 10

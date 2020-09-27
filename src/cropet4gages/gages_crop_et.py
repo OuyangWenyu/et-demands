@@ -84,8 +84,6 @@ def main(log_level=logging.WARNING,
     # File paths are read from INI
     data.set_crop_params()
     data.set_crop_coeffs()
-    if data.co2_flag:
-        data.set_crop_co2()
 
     # Read cell properties, crop flags and cuttings
     cells = et_cell.ETCellData()
