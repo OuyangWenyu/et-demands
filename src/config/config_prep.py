@@ -41,6 +41,7 @@ __C.GAGES.gagesii_points_file = os.path.join(__C.GAGES.gagesii_points_dir, "gage
 __C.GAGES.attrDir = os.path.join(__C.GAGES.GAGES_PATH, "basinchar_and_report_sept_2011")
 __C.GAGES.gage_files_dir = os.path.join(__C.GAGES.attrDir, 'spreadsheets-in-csv-format')
 __C.GAGES.gage_id_file = os.path.join(__C.GAGES.gage_files_dir, 'conterm_basinid.txt')
+__C.GAGES.basin_topo_file = os.path.join(__C.GAGES.gage_files_dir, 'conterm_topo.txt')
 
 # NOAA RefET
 __C.NOAA = edict()
@@ -48,6 +49,13 @@ __C.NOAA.noaa_site_url = 'ftp2.psl.noaa.gov'
 __C.NOAA.noaa_site_folder = 'Projects/RefET/CONUS/Gen-0/data'
 __C.NOAA.noaa_year = 2008
 __C.NOAA.noaa_folder = os.path.join(__C.DATA_ROOT_DIR, 'common', "noaa_daily_ret")
+
+# NLDAS grid shapefile: the NOAA RefET are using same grid system with NLDAS
+__C.NLDAS = edict()
+__C.NLDAS.grid_shpfile_url = "https://ldas.gsfc.nasa.gov/sites/default/files/ldas/nldas/NLDAS_Grid_Reference.zip"
+__C.NLDAS.nldas_folder = os.path.join(__C.DATA_ROOT_DIR, 'common', "nldas")
+__C.NLDAS.nldas_grid_shpfile_zip = os.path.join(__C.DATA_ROOT_DIR, 'common', "nldas", "NLDAS_Grid_Reference.zip")
+__C.NLDAS.nldas_grid_shpfile = os.path.join(__C.DATA_ROOT_DIR, 'common', "nldas", "NLDAS_Grid_Reference.shp")
 
 # Soil data come from et-demands preprocessed STATSGO2
 __C.SOILS = edict()
@@ -73,6 +81,5 @@ __C.CROP_ET.crosswalk_path = os.path.join(__C.CODE_ROOT_DIR, "prep", "cdl_crossw
 __C.CROP_ET.soil_crop_mask_flag = True
 __C.CROP_ET.save_crop_mask_flag = True
 
-## ET-Demands folder
-__C.CROP_ET.crop_et_folder = os.path.join(__C.CODE_ROOT_DIR, "cropET")
-# __C.CROP_ET.stations_path = os.path.join(definition.ROOT_DIR,"testing","data","gis","stations","gridmet_huc8_stations.shp")
+# ET-Demands folder
+__C.CROP_ET.crop_et_folder = os.path.join(__C.CODE_ROOT_DIR, "cropet4gages")

@@ -8,6 +8,7 @@ import datetime as dt
 import logging
 import os
 import sys
+import zipfile
 
 from src.prep import _util as util
 from src.config.config_prep import cfg_prep
@@ -26,7 +27,7 @@ def main(overwrite_flag=False):
     None
 
     """
-    logging.info('\nDownload and extract CONUS NOAA RefET files')
+    logging.info('\nDownload and extract CONUS NOAA RefET files and NLDAS grid shpfile')
 
     noaa_ws = cfg_prep.NOAA.noaa_folder
     noaa_year = cfg_prep.NOAA.noaa_year
@@ -52,6 +53,20 @@ def main(overwrite_flag=False):
         logging.debug(noaa_path)
 
         util.ftp_download_dir(site_url, site_folder, noaa_path)
+
+    nldas_grid_shpfile_url = cfg_prep.NLDAS.grid_shpfile_url
+    nldas_grid_shpfile_zip_path = cfg_prep.NLDAS.nldas_grid_shpfile_zip
+    nldas_grid_shpfile = cfg_prep.NLDAS.nldas_grid_shpfile
+    nldas_ws = cfg_prep.NLDAS.nldas_folder
+    if not os.path.isdir(nldas_ws):
+        os.makedirs(nldas_ws)
+    if not os.path.isfile(nldas_grid_shpfile_zip_path) and not os.path.isfile(nldas_grid_shpfile):
+        util.url_download(nldas_grid_shpfile_url, nldas_grid_shpfile_zip_path)
+        if os.path.isfile(nldas_grid_shpfile_zip_path) and not os.path.isfile(nldas_grid_shpfile):
+            logging.info('  Extracting NLDAS_Grid_Reference files')
+
+            with zipfile.ZipFile(nldas_grid_shpfile_zip_path) as zf:
+                zf.extractall(nldas_ws)
 
 
 def arg_parse():
