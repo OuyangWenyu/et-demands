@@ -231,7 +231,8 @@ class CropETData:
         except:
             logging.error('ERROR:  Crop coefficients data file must be specified')
             sys.exit()
-        self.crop_coefs_path = os.path.join(self.static_folder, crop_coefs_name)
+        # self.crop_coefs_path = os.path.join(self.static_folder, crop_coefs_name)
+        self.crop_coefs_path = config.CROP_ET.crop_coefs_path
         if not os.path.isfile(self.crop_coefs_path):
             self.crop_coefs_path = crop_coefs_name
             if not os.path.isfile(self.crop_coefs_path):
@@ -586,7 +587,7 @@ class CropETData:
             logging.error('ERROR:refet folder {} does not exist'.format(self.weather['ws']))
             sys.exit()
 
-        self.weather['file_type'] = 'csv'
+        self.weather['file_type'] = 'txt'
         # self.weather['data_structure_type'] = 'SF P'
         self.weather['name_format'] = config.WEATHER.name_format
         self.weather['header_lines'] = config.WEATHER.header_lines
@@ -630,10 +631,7 @@ class CropETData:
             sys.exit()
 
         # Field names
-        # Following fields are mandatory
-        # DEADBEEF - Are snow and snow depth required?
-        # Add check for (tdew or ea or q)
-        field_list = ['tmin', 'tmax', 'ppt', 'wind']
+        field_list = ['tmin', 'tmax', 'ppt', 'wind', 'rh_min']
         for f_name in field_list:
             try:
                 self.weather['fields'][f_name] = eval('config.WEATHER.' + f_name + '_field')
@@ -664,79 +662,6 @@ class CropETData:
             else:
                 self.weather['fnspec'][f_name] = 'Unused'
 
-        # Snow and snow depth are optional
-        try:
-            self.weather['fields']['snow'] = config.WEATHER.snow_field
-            if self.weather['fields']['snow'] is None or self.weather['fields']['snow'] == 'None':
-                self.weather['fields']['snow'] = 'Snow'
-                self.weather['units']['snow'] = 'mm/day'
-                self.weather['fnspec']['snow'] = 'Estimated'
-            else:
-                try:
-                    self.weather['units']['snow'] = config.WEATHER.snow_units
-                except:
-                    self.weather['units']['snow'] = 'mm/day'
-                try:
-                    self.weather['fnspec']['snow'] = config.WEATHER.snow_name
-                except:
-                    self.weather['fnspec']['snow'] = self.weather['fields']['snow']
-        except:
-            self.weather['fields']['snow'] = 'Snow'
-            self.weather['units']['snow'] = 'mm/day'
-            self.weather['fnspec']['snow'] = 'Estimated'
-
-        try:
-            self.weather['fields']['snow_depth'] = config.WEATHER.depth_field
-            if self.weather['fields']['snow_depth'] is None or self.weather['fields']['snow_depth'] == 'None':
-                self.weather['fields']['snow_depth'] = 'SDep'
-                self.weather['units']['snow_depth'] = 'mm'
-                self.weather['fnspec']['snow_depth'] = 'Estimated'
-            else:
-                try:
-                    self.weather['units']['snow_depth'] = config.WEATHER.depth_units
-                except:
-                    self.weather['units']['snow_depth'] = 'mm'
-                try:
-                    self.weather['fnspec']['snow_depth'] = config.WEATHER.depth_name
-                except:
-                    self.weather['fnspec']['snow_depth'] = self.weather['fields']['snow_depth']
-        except:
-            self.weather['fields']['snow_depth'] = 'SDep'
-            self.weather['units']['snow_depth'] = 'mm'
-            self.weather['fnspec']['snow_depth'] = 'Estimated'
-
-        # Dewpoint temperature can be set or computed from ea or q
-        # Field that is provided is used to estimate rh_min for kc calcs
-        for x in ['tdew', 'ea', 'q']:
-            self.weather['fields'][x] = None
-            self.weather['units'][x] = None
-            # Check if field exists
-            if x + '_field' in list(config.WEATHER.keys()):
-                self.weather['fields'][x] = eval('config.WEATHER.' + x + '_field')
-            # If field exists check for units
-            if self.weather['fields'][x]:
-                try:
-                    self.weather['units'][x] = eval('config.WEATHER.' + x + '_units')
-                except configparser.NoOptionError:
-                    logging.info(x + ' units not found in .ini. skipping')
-                    continue
-            # Check if units is None or ''
-            if self.weather['units'][x] is None or self.weather['units'][x].lower() in ['', 'None']:
-                logging.debug(x + 'units was not set or was set to none')
-                continue
-            # If field and units exist; add fnspec (field for now)
-            # What is fnspec used for?
-            if self.weather['fields'][x] and self.weather['units'][x]:
-                self.weather['fnspec'][x] = self.weather['fields'][x]
-                break
-
-        # Check that at least one atmospheric moisture option is present in INI
-        if not ((self.weather['fields']['tdew'] and self.weather['units']['tdew']) or
-                (self.weather['fields']['ea'] and self.weather['units']['ea']) or
-                (self.weather['fields']['q'] and self.weather['units']['q'])):
-            logging.error('tdew, ea, or q field and units must be specific in INI WEATHER section. \nExiting.')
-            sys.exit()
-
         # Wind speeds measured at heights other than 2 meters will be scaled
         try:
             self.weather['wind_height'] = config.WEATHER.wind_height
@@ -753,7 +678,7 @@ class CropETData:
         units_list = ['c', 'mm', 'mm/d', 'mm/day', 'm/d', 'm', 'meter',
                       'in*100', 'in', 'in/day', 'inches/day', 'kg/kg', 'kpa',
                       'mmhg', 'k', 'f', 'm/s', 'mps', 'mpd', 'miles/day',
-                      'miles/d']
+                      'miles/d', "%"]
         for k, v in self.weather['units'].items():
             if v is not None and v.lower() not in units_list:
                 logging.error('  ERROR: {0} units {1} are not currently supported'.format(k, v))
@@ -824,7 +749,7 @@ class CropETData:
         """
 
         logging.info('  Reading crop coefficients')
-        self.crop_coeffs = crop_coefficients.read_crop_coefs_txt(self)
+        self.crop_coeffs = crop_coefficients.read_fao56_crop_coefs(self)
 
 
 def console_logger(logger=logging.getLogger(''), log_level=logging.INFO):

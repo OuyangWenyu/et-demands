@@ -14,6 +14,9 @@ import numpy as np
 import pandas as pd
 import sys
 
+from src.cropet4gages import compute_crop_gdd, calculate_height, kc_daily, compute_crop_et
+from src.cropet4gages.initialize_crop_cycle import InitializeCropCycle
+
 
 class DayData:
     """Daily crop data container
@@ -59,8 +62,7 @@ def crop_cycle_mp(data, et_cell, mp_procs=1):
         if et_cell.crop_flags[crop_num] != 0:
             # Force debug_flag false when multiprocessing
             crop_count += 1
-            crop_mp_list.append([crop_count, data, et_cell, crop, False,
-                                 mp_procs])
+            crop_mp_list.append([crop_count, data, et_cell, crop, False, mp_procs])
     results = []
     if crop_mp_list:
         pool = mp.Pool(mp_procs)
@@ -164,10 +166,9 @@ def crop_day_loop(crop_count, data, et_cell, crop, debug_flag=False,
     if mp_procs == 1:
         logging.warning('Crop {} - {}'.format(crop.class_number, crop.name))
     if debug_flag:
-        logging.debug(
-            '{}:  Curve {} {}  Class {}  Flag {}'.format(
-                func_str, crop.curve_number, crop.curve_name,
-                crop.class_number, et_cell.crop_flags[crop.class_number]))
+        logging.debug('{}:  Curve {} {}  Class {}  Flag {}'.format(func_str, crop.curve_number, crop.curve_name,
+                                                                   crop.class_number,
+                                                                   et_cell.crop_flags[crop.class_number]))
         logging.debug('  GDD trigger DOY: {}'.format(crop.gdd_trigger_doy))
 
     # 'foo' is holder of all these global variables for now
@@ -176,10 +177,6 @@ def crop_day_loop(crop_count, data, et_cell, crop, debug_flag=False,
     # First time through for crop, load basic crop parameters and
     # process climate data
     foo.crop_load(data, et_cell, crop)
-
-    # GetCO2 correction factors for each crop
-    if data.co2_flag:
-        foo.setup_co2(et_cell, crop)
 
     # Initialize crop data frame
     foo.setup_dataframe(et_cell)
@@ -193,23 +190,16 @@ def crop_day_loop(crop_count, data, et_cell, crop, debug_flag=False,
 
     for step_dt, step_doy in foo.crop_df[['doy']].iterrows():
         if debug_flag:
-            logging.debug(
-                '\n{}: DOY {}  Date {}'.format(
-                    func_str, int(step_doy), step_dt.date()))
+            logging.debug('\n{}: DOY {}  Date {}'.format(func_str, int(step_doy), step_dt.date()))
 
             # Log RefET values at time step
-            logging.debug((
-                    '{}: PPT {:.6f}  Wind {:.6f}  ' +
-                    'Tdew {:.6f} ETref {:.6f}').format(
+            logging.debug('{}: PPT {:.6f}  Wind {:.6f}  ETref {:.6f}'.format(
                 func_str, et_cell.climate_df.at[step_dt, 'ppt'],
                 et_cell.climate_df.at[step_dt, 'wind'],
-                et_cell.climate_df.at[step_dt, 'tdew'],
                 et_cell.refet_df.at[step_dt, 'etref']))
 
             # Log climate values at time step
-            logging.debug((
-                    '{}: tmax {:.6f}  tmin {:.6f}  ' +
-                    'tmean {:.6f}  t30 {:.6f}').format(
+            logging.debug('{}: tmax {:.6f}  tmin {:.6f}  tmean {:.6f}  t30 {:.6f}'.format(
                 func_str, et_cell.climate_df.at[step_dt, 'tmax'],
                 et_cell.climate_df.at[step_dt, 'tmin'],
                 et_cell.climate_df.at[step_dt, 'tmean'],
@@ -219,10 +209,9 @@ def crop_day_loop(crop_count, data, et_cell, crop, debug_flag=False,
         if not foo.in_season and foo.dormant_setup_flag:
             foo.setup_dormant(et_cell, crop)
         if debug_flag:
-            logging.debug(
-                '{}: in_season[{}]  crop_setup[{}]  dormant_setup[{}]'.format(
-                    func_str, foo.in_season, foo.crop_setup_flag,
-                    foo.dormant_setup_flag))
+            logging.debug('{}: in_season[{}]  crop_setup[{}]  dormant_setup[{}]'.format(func_str, foo.in_season,
+                                                                                        foo.crop_setup_flag,
+                                                                                        foo.dormant_setup_flag))
 
         # Track variables for each day
         # For now, cast all values to native Python types
@@ -232,12 +221,10 @@ def crop_day_loop(crop_count, data, et_cell, crop, debug_flag=False,
         foo_day.month = int(step_dt.month)
         foo_day.day = int(step_dt.day)
         foo_day.date = step_dt
-        foo_day.tdew = float(et_cell.climate_df.at[step_dt, 'tdew'])
         foo_day.u2 = float(et_cell.climate_df.at[step_dt, 'wind'])
         foo_day.precip = float(et_cell.climate_df.at[step_dt, 'ppt'])
         foo_day.rh_min = float(et_cell.climate_df.at[step_dt, 'rh_min'])
         foo_day.etref = float(et_cell.climate_df.at[step_dt, 'etref'])
-        foo_day.snow_depth = float(et_cell.climate_df.at[step_dt, 'snow_depth'])
         if data.phenology_option == 0:
             foo_day.tmean = float(et_cell.climate_df.at[step_dt, 'tmean'])
             foo_day.tmin = float(et_cell.climate_df.at[step_dt, 'tmin'])
@@ -271,10 +258,6 @@ def crop_day_loop(crop_count, data, et_cell, crop, debug_flag=False,
             foo_day.tmax = float(et_cell.climate_df.at[step_dt, 'maxt'])
             foo_day.t30 = float(et_cell.climate_df.at[step_dt, '30t'])
 
-        # Get CO2 correction factor for each day
-        if data.co2_flag:
-            foo_day.co2 = float(foo.co2.at[step_dt])
-
         # Compute crop growing degree days
         compute_crop_gdd.compute_crop_gdd(crop, foo, foo_day)
 
@@ -282,8 +265,8 @@ def crop_day_loop(crop_count, data, et_cell, crop, debug_flag=False,
         # Moved up to this point 12/26/07 for use in adj. Kcb and kc_max
         calculate_height.calculate_height(crop, foo, debug_flag)
 
-        # Interpolate Kcb and make climate adjustment (for ETo basis)
-        kcb_daily.kcb_daily(data, et_cell, crop, foo, foo_day, debug_flag)
+        # Interpolate Kc (for ETo basis)
+        kc_daily.kcb_daily(data, et_cell, crop, foo, foo_day, debug_flag)
 
         # Calculate Kcb, Ke, ETc
         compute_crop_et.compute_crop_et(data, et_cell, crop, foo, foo_day,
@@ -307,35 +290,27 @@ def crop_day_loop(crop_count, data, et_cell, crop, debug_flag=False,
 
         # Write final output file variables to DEBUG file
         if debug_flag:
-            logging.debug((
-                '{}: ETref  {:.6f}  Precip {:.6f}  T30 {:.6f}').format(
-                func_str, foo_day.etref, foo_day.precip, foo_day.t30))
-            logging.debug((
-                '{}: ETact  {:.6f}  ETpot {:.6f}   ETbas {:.6f}').format(
-                func_str, foo.etc_act, foo.etc_pot, foo.etc_bas))
-            logging.debug((
-                    '{}: Irrig  {:.6f}  Runoff {:.6f}  ' +
-                    'DPerc {:.6f}  NIWR {:.6f}').format(
-                func_str, foo.irr_sim, foo.sro, foo.dperc, foo.niwr))
+            logging.debug(
+                '{}: ETref  {:.6f}  Precip {:.6f}  T30 {:.6f}'.format(func_str, foo_day.etref, foo_day.precip,
+                                                                      foo_day.t30))
+            logging.debug('{}: ETact  {:.6f}  ETpot {:.6f}   ETbas {:.6f}'.format(func_str, foo.etc_act, foo.etc_pot,
+                                                                                  foo.etc_bas))
+            logging.debug(
+                '{}: Irrig  {:.6f}  Runoff {:.6f}  DPerc {:.6f}  NIWR {:.6f}'.format(func_str, foo.irr_sim, foo.sro,
+                                                                                     foo.dperc, foo.niwr))
 
         # Check that season started
         if foo_day.month == 12 and foo_day.day == 31:
-            season_count = foo.crop_df.loc[
-                           str(foo_day.year):str(foo_day.year), 'season'].sum()
+            season_count = foo.crop_df.loc[str(foo_day.year):str(foo_day.year), 'season'].sum()
             if season_count == 0:
-                logging.warning(
-                    '  Crop {} - {} growing season never started'.format(
-                        crop.class_number, foo_day.year))
+                logging.warning('  Crop {} - {} growing season never started'.format(crop.class_number, foo_day.year))
             elif season_count == 1:
                 logging.warning(
-                    '  Crop {} - {} growing season active for 1 day'.format(
-                        crop.class_number, foo_day.year))
+                    '  Crop {} - {} growing season active for 1 day'.format(crop.class_number, foo_day.year))
 
     # Write output files
-    if (data.cet_out['daily_output_flag'] or
-            data.cet_out['monthly_output_flag'] or
-            data.cet_out['annual_output_flag'] or
-            data.gs_output_flag):
+    if (data.cet_out['daily_output_flag'] or data.cet_out['monthly_output_flag'] or
+            data.cet_out['annual_output_flag'] or data.gs_output_flag):
         write_crop_output(crop_count, data, et_cell, crop, foo)
     return True
 

@@ -82,10 +82,11 @@ __C.CROP_ET.crop_field = "CDL"
 
 # Crosswalk file to map CDL crops to ET-Demands crops
 # Crosswalk field names are hardcoded in the et_demands_zonal_stats.py
-__C.CROP_ET.crosswalk_path = os.path.join(__C.CODE_ROOT_DIR, "prep", "cdl_crosswalk_default.csv")
+__C.CROP_ET.crosswalk_path = os.path.join(__C.CODE_ROOT_DIR, "prep", "preprocess4gages", "cdl_crosswalk_fao56.csv")
 __C.CROP_ET.soil_crop_mask_flag = True
 __C.CROP_ET.save_crop_mask_flag = True
 
 # ET-Demands folder
 __C.CROP_ET.crop_et_folder = os.path.join(__C.CODE_ROOT_DIR, "cropet4gages")
 __C.CROP_ET.refet_folder = os.path.join(__C.CROP_ET.project_folder, "climate")
+__C.CROP_ET.template_folder = os.path.join(__C.CODE_ROOT_DIR, "prep", "preprocess4gages", "template")

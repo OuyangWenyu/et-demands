@@ -18,13 +18,13 @@ from src.prep import _arcpy
 from src.config.config_prep import cfg_prep
 
 
-def main(area_threshold=10, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=False):
+def main(area_threshold=0.25, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=False):
     """Build static text files needed to run ET-Demands model
 
     Parameters
     ----------
     area_threshold : float
-        CDL area threshold [acres] (the default is 10 acres).
+        CDL area threshold [acres] (the default is 0.25 acres).
     beef_cuttings : int
         Initial number of beef hay cuttings (the default is 4).
     dairy_cuttings : int
@@ -45,7 +45,7 @@ def main(area_threshold=10, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=Fa
     aridity = 50
     irrigation = 1
     # DEADBEEF - The number of crops should not be hardcoded here
-    crops = 89
+    crops = 123
 
     # Input paths
     # DEADBEEF - For now, get cropET folder from INI file
@@ -75,10 +75,8 @@ def main(area_threshold=10, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=Fa
     try:
         template_ws = config.CROP_ET.template_folder
     except:
-        template_ws = os.path.join(os.path.dirname(crop_et_ws), 'static')
-        logging.info(
-            '\nStatic text file "template_folder" parameter was not set '
-            'in the INI\n  Defaulting to: {}'.format(template_ws))
+        logging.error('CROP_ET template_folder parameter must be set in the INI file, exiting')
+        return False
 
     # Read data from geodatabase or shapefile
     # if '.gdb' in et_cells_path and not et_cells_path.endswith('.shp'):
@@ -165,7 +163,7 @@ def main(area_threshold=10, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=Fa
     # Read ET Cell zonal stats
     logging.info('\nReading ET Cell Zonal Stats')
     logging.debug('  {}'.format(et_cells_path))
-    crop_field_list = sorted([f for f in _arcpy.list_fields(et_cells_path) if re.match('CROP_\d{2}', f)])
+    crop_field_list = sorted([f for f in _arcpy.list_fields(et_cells_path) if re.match('CROP_\d{3}', f)])
     fields = [cell_id_field, cell_lat_field, cell_lon_field, awc_in_ft_field, clay_field, sand_field, hydgrp_num_field,
               hydgrp_field]
     fields = fields + crop_field_list
@@ -221,7 +219,7 @@ def main(area_threshold=10, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=Fa
             basin_data = basin_data_dict[basin_id]
             basin_elev = '{:.2f}'.format(basin_data[basin_elev_field])
             # There is an extra/unused column in the template and excel files
-            output_list = [cell_id, basin_id, basin_lat, basin_lon, basin_elev, permeability,
+            output_list = [cell_id, cell_id, basin_id, basin_lat, basin_lon, basin_elev, permeability,
                            '{:.4f}'.format(cell_data[awc_in_ft_field]), soil_depth, cell_data[hydgrp_field],
                            cell_data[hydgrp_num_field], aridity, '']
             output_f.write('\t'.join(map(str, output_list)) + '\n')
@@ -234,8 +232,8 @@ def main(area_threshold=10, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=Fa
     with open(cell_crops_path, 'a') as output_f:
         for cell_id, cell_data in sorted(cell_data_dict.items()):
             basin_id = cell_id
-            output_list = [cell_id, basin_id, irrigation]
-            crop_list = ['CROP_{:02d}'.format(i) for i in range(1, crops + 1)]
+            output_list = [cell_id, cell_id, basin_id, irrigation]
+            crop_list = ['CROP_{:03d}'.format(i) for i in range(1, crops + 1)]
             crop_area_list = []
             for crop in crop_list:
                 if crop in cell_data.keys() and cell_data[crop] is not None:
@@ -252,7 +250,8 @@ def main(area_threshold=10, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=Fa
     logging.debug('  {}'.format(cell_cuttings_path))
     with open(cell_cuttings_path, 'a') as output_f:
         for cell_id, cell_data in sorted(cell_data_dict.items()):
-            output_list = [cell_id, '{:>9.4f}'.format(cell_data[cell_lat_field]), dairy_cuttings, beef_cuttings]
+            output_list = [cell_id, cell_id, '{:>9.4f}'.format(cell_data[cell_lat_field]), dairy_cuttings,
+                           beef_cuttings]
             output_f.write('\t'.join(map(str, output_list)) + '\n')
 
     # Write monthly ETo ratios
@@ -275,21 +274,12 @@ def arg_parse():
     parser = argparse.ArgumentParser(
         description='ET-Demands Static Files',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument(
-        '--acres', default=10, type=float,
-        help='Crop area threshold')
-    parser.add_argument(
-        '--beef', default=4, type=int,
-        help='Number of beef hay cuttings')
-    parser.add_argument(
-        '--dairy', default=5, type=int,
-        help='Number of dairy hay cuttings')
-    parser.add_argument(
-        '-o', '--overwrite', default=None, action='store_true',
-        help='Overwrite existing file')
-    parser.add_argument(
-        '--debug', default=logging.INFO, const=logging.DEBUG,
-        help='Debug level logging', action="store_const", dest="loglevel")
+    parser.add_argument('--acres', default=0.25, type=float, help='Crop area threshold')
+    parser.add_argument('--beef', default=4, type=int, help='Number of beef hay cuttings')
+    parser.add_argument('--dairy', default=5, type=int, help='Number of dairy hay cuttings')
+    parser.add_argument('-o', '--overwrite', default=None, action='store_true', help='Overwrite existing file')
+    parser.add_argument('--debug', default=logging.INFO, const=logging.DEBUG, help='Debug level logging',
+                        action="store_const", dest="loglevel")
     args = parser.parse_args()
 
     return args

@@ -90,8 +90,6 @@ def main(log_level=logging.WARNING,
     cells.set_cell_properties(data)
     cells.set_cell_crops(data)
     cells.set_cell_cuttings(data)
-    cells.filter_crops(data)
-    cells.filter_cells(data)
 
     # First apply static crop parameters to all cells
     # Could "cell" just inherit "data" values instead ????

@@ -167,7 +167,7 @@ def main(overwrite_flag=False):
 
     # Crop fields are only added for needed crops below
     # for crop_num in crop_num_list:
-    #     field_name = 'CROP_{0:02d}'.format(crop_num)
+    #     field_name = 'CROP_{0:03d}'.format(crop_num)
     #     if field_name not in zone_field_list:
     #         logging.debug('  {}'.format(field_name))
     #         _arcpy.add_field(zone_path, field_name, ogr.OFTInteger)
@@ -279,8 +279,8 @@ def main(overwrite_flag=False):
     cross_df = pd.read_csv(crosswalk_path)
     cross_dict = dict()
     for index, row in cross_df.iterrows():
-        # cross_dict[int(row.cdl_no)] = list(map(int, str(row.etd_no).split(',')))
-        cross_dict[row.cdl_no] = list(map(int, str(row.etd_no).split(',')))
+        # cross_dict[row.cdl_no] = list(map(int, str(row.etd_no).split(',')))
+        cross_dict[row.cdl_no] = list(map(int, str(row.fao56_no).split(',')))
     # logging.debug(crop_num_dict)
 
     # Build the crop list
@@ -335,7 +335,7 @@ def main(overwrite_flag=False):
 
         # Initialize zonal stats crop acreages
         for etd_crop in etd_crops:
-            field = 'CROP_{:02d}'.format(etd_crop)
+            field = 'CROP_{:03d}'.format(etd_crop)
             crop_stats[zone_fid][field] = 0
         crop_stats[zone_fid][acreage_field] = 0
 
@@ -361,7 +361,7 @@ def main(overwrite_flag=False):
             zone_crop_polys.append(clip_poly)
 
             for etd_crop in cross_dict[crop_value]:
-                field = 'CROP_{:02d}'.format(etd_crop)
+                field = 'CROP_{:03d}'.format(etd_crop)
                 crop_stats[zone_fid][field] += clip_area
 
         if soil_crop_mask_flag or save_crop_mask_flag:
@@ -548,7 +548,7 @@ def main(overwrite_flag=False):
 #     # Save by FID/feature for easier writing to shapefile
 #     logging.debug('\nParsing crop zonal stats')
 #     zone_crop_dict = {}
-#     crop_field_fmt = 'CROP_{:02d}'
+#     crop_field_fmt = 'CROP_{:03d}'
 #     for fid, ftr in enumerate(zs):
 #         # logging.debug('FID: {}'.format(i))
 #         zone_crop_dict[fid] = {}
