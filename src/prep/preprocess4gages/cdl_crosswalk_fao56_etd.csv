@@ -1,0 +1,109 @@
+cdl_no,fao56_no,comment1,etd_no,comment2,Crop number and flag for crop type
+1,61,"Corn -> Maize, Field (grain) (field corn)",7,Corn -> Field Corn,-7
+2,48,Cotton -> Cotton,58,Cotton -> Cotton,-58
+3,66,Rice -> Rice,65,Rice -> Rice,-65
+4,64,Sorghum -> Sorghum - grain,60,Sorghum -> Sorghum,-60
+5,43,Soybeans -> Soybeans,66,Soybeans -> Soybeans,-66
+6,55,Sunflower -> Sunflower,36,Sunflower -> Sunflower -irrigated,-36
+10,39,Peanuts -> Groundnut (Peanut),67,Peanuts -> Peanuts,-67
+11,55,Tobacco -> Sunflower,36,Tobacco -> Sunflower -irrigated,-36
+12,62,"Sweet Corn -> Maize, Sweet  (sweet corn)",9,Sweet Corn -> Sweet Corn Early Plant,-9
+13,61,"Pop or Orn Corn -> Maize, Field (grain) (field corn)",7,Pop or Orn Corn -> Field Corn,-7
+14,46,Mint -> Mint,33,Mint -> Mint,33
+21,56,Barley -> Barley,11,Barley -> Spring Grain - irrigated,-11
+22,58,Durum Wheat -> Spring Wheat,11,Durum Wheat -> Spring Grain - irrigated,-11
+23,58,Spring Wheat -> Spring Wheat,11,Spring Wheat -> Spring Grain - irrigated,-11
+24,60,Winter Wheat -> Winter Wheat - with non-frozen soils,13,Winter Wheat -> Winter Grain - irrigated,-13
+25,58,Other Small Grains -> Spring Wheat,11,Other Small Grains -> Spring Grain - irrigated,-11
+26,"43,60",Dbl Crop WinWht/Soybeans -> Winter Wheat - with non-frozen soils/Soybeans,"13,85",Dbl Crop WinWht/Soybeans -> Soybeans After Another Crop,-85
+27,58,Rye -> Spring Wheat,11,Rye -> Spring Grain - irrigated,-11
+28,57,Oats -> Oats,11,Oats -> Spring Grain - irrigated,-11
+29,63,Millet -> Millet,68,Millet -> Millet,-68
+30,58,Speltz -> Spring Wheat,11,Speltz -> Spring Grain - irrigated,-11
+31,52,"Canola -> Rapeseed, Canola",40,Canola -> Canola,40
+32,49,Flaxseed -> Flax,11,Flaxseed -> Spring Grain - irrigated,-11
+33,53,Safflower -> Safflower,38,Safflower -> Safflower -irrigated,-38
+34,52,"Rape Seed -> Rapeseed, Canola",41,Rape Seed -> Mustard,-41
+35,52,"Mustard -> Rapeseed, Canola",41,Mustard -> Mustard,-41
+36,68,Alfalfa -> Alfalfa Hay - individual cutting periods,3,Alfalfa -> Alfalfa - Beef Style,3
+37,74,Other Hay/Non Alfalfa -> Rye Grass hay - averaged cutting effects,4,Other Hay/Non Alfalfa -> Grass Hay,4
+38,52,"Camelina -> Rapeseed, Canola",41,Camelina -> Mustard,-41
+39,52,"Buckwheat -> Rapeseed, Canola",41,Buckwheat -> Mustard,-41
+41,31,Sugarbeets -> Sugar Beet,31,Sugarbeets -> Sugar beets,-31
+42,33,"Dry Beans -> Beans, dry and Pulses",5,Dry Beans -> Snap and Dry Beans - fresh,-5
+43,28,Potatoes -> Potato,30,Potatoes -> Potatoes,-30
+44,58,Other Crops -> Spring Wheat,11,Other Crops -> Spring Grain - irrigated,-11
+45,81,Sugarcane ->Sugar Cane,76,Sugarcane -> Sugarcane,-76
+46,29,Sweet Potatoes -> Sweet Potato,30,Sweet Potatoes -> Potatoes,-30
+47,1,Misc Vegs & Fruits -> Broccoli,21,Misc Vegs & Fruits -> Garden Vegetables  - general,-21
+48,23,Watermelons -> Watermelon,24,Watermelons -> Melons,-24
+49,10,Onions -> Onions - green,23,Onions -> Onions,-23
+50,19,Cucumbers -> Cucumber - Machine harvest,21,Cucumbers -> Garden Vegetables  - general,-21
+51,34,Chick Peas -> Chick Pea,5,Chick Peas -> Snap and Dry Beans - fresh,-5
+52,40,Lentils -> Lentil,5,Lentils -> Snap and Dry Beans - fresh,-5
+53,41,Peas -> Peas - Fresh,27,Peas -> Peas--fresh,-27
+54,16,Tomatoes -> Tomato,69,Tomatoes -> Tomatoes,-69
+55,94,Caneberries -> Berries (bushes),75,Caneberries -> Cranberries,75
+56,97,Hops -> Hops,32,Hops -> Hops,32
+57,1,Herbs -> Broccoli,21,Herbs -> Garden Vegetables  - general,-21
+58,72,"Clover/Wildflowers -> Clover hay, Berseem - averaged cutting effects",41,Clover/Wildflowers -> Mustard,-41
+59,79,Sod/Grass Seed -> Turf grass - cool season,17,Sod/Grass Seed -> Grass - Turf (lawns) -irrigated,17
+60,75,Switchgrass -> Sudan Grass hay (annual) - averaged cutting effects,81,Switchgrass -> Sudan,-81
+66,101,"Cherries -> Apples, Cherries, Pears - active ground cover, killing frost",19,Cherries -> Orchards - Apples and Cherries w/ground cover,19
+67,105,"Peaches -> Apricots, Peaches, Stone Fruit - active ground cover, killing frost",19,Peaches -> Orchards - Apples and Cherries w/ground cover,19
+68,101,"Apples -> Apples, Cherries, Pears - active ground cover, killing frost",19,Apples -> Orchards - Apples and Cherries w/ground cover,19
+69,95,Grapes -> Grapes - Table or Raisin,25,Grapes -> Grapes,25
+70,114,Christmas Trees -> Conifer Trees,82,Christmas Trees -> Christmas Trees,82
+71,101,"Other Tree Crops -> Apples, Cherries, Pears - active ground cover, killing frost",19,Other Tree Crops -> Orchards - Apples and Cherries w/ground cover,19
+72,111,"Citrus -> Citrus, with active ground cover or weeds - 70% canopy",70,Citrus -> Oranges,70
+74,118,Pecans -> Walnut Orchard,74,Pecans -> Nuts,74
+75,98,"Almonds -> Almonds, no ground cover",74,Almonds -> Nuts,74
+76,118,Walnuts -> Walnut Orchard,74,Walnuts -> Nuts,74
+77,101,"Pears -> Apples, Cherries, Pears - active ground cover, killing frost",19,Pears -> Orchards - Apples and Cherries w/ground cover,19
+176,77,Grassland/Pasture -> Grazing Pasture - Rotated Grazing,15,Grassland/Pasture -> Grass Pasture - high management,15
+204,117,"Pistachios -> Pistachios, no ground cover",74,Pistachios -> Nuts,74
+205,58,Triticale -> Spring Wheat,11,Triticale -> Spring Grain - irrigated,-11
+206,4,Carrots -> Carrots,22,Carrots -> Carrots,-22
+207,45,Asparagus -> Asparagus,21,Asparagus -> Aparagus,-21
+208,7,Garlic -> Garlic,43,Garlic -> Garlic,-43
+209,17,Cantaloupes -> Cantaloupe,24,Cantaloupes -> Melons,-24
+210,101,"Prunes -> Apples, Cherries, Pears - active ground cover, killing frost",19,Prunes -> Orchards - Apples and Cherries w/ground cover,19
+211,116,Olives -> Olives (40 to 60% ground coverage by canopy),61,Olives -> Olives,61
+212,111,"Oranges -> Citrus, with active ground cover or weeds - 70% canopy",70,Oranges -> Oranges,70
+213,22,Honeydew Melons -> Sweet Melons,24,Honeydew Melons -> Melons,-24
+214,1,Broccoli -> Broccoli,21,Broccoli -> Garden Vegetables  - general,-21
+216,15,Peppers -> Sweet Peppers (bell),59,Peppers -> Peppers,-59
+217,105,"Pomegranates -> Apricots, Peaches, Stone Fruit - active ground cover, killing frost",19,Pomegranates -> Orchards - Apples and Cherries w/ground cover,19
+218,105,"Nectarines -> Apricots, Peaches, Stone Fruit - active ground cover, killing frost",19,Nectarines -> Orchards - Apples and Cherries w/ground cover,19
+219,1,Greens -> Broccoli,21,Greens -> Garden Vegetables  - general,-21
+220,105,"Plums -> Apricots, Peaches, Stone Fruit - active ground cover, killing frost",19,Plums -> Orchards - Apples and Cherries w/ground cover,19
+221,47,Strawberries -> Strawberries,62,Strawberries -> Strawberries,-62
+222,21,"Squash -> Squash, Zucchini",21,Squash -> Garden Vegetables  - general,-21
+223,105,"Apricots -> Apricots, Peaches, Stone Fruit - active ground cover, killing frost",19,Apricots -> Orchards - Apples and Cherries w/ground cover,19
+224,33,"Vetch -> Beans, dry and Pulses",6,Vetch -> Snap and Dry Beans - seed,-6
+225,"60,61","Dbl Crop WinWht/Corn -> Winter Wheat - with non-frozen soils/Maize, Field (grain) (field corn)",77,Dbl Crop WinWht/Corn -> Field Corn After Another Crop,-77
+226,"57,61","Dbl Crop Oats/Corn -> Oats/Maize, Field (grain) (field corn)",77,Dbl Crop Oats/Corn -> Field Corn After Another Crop,-77
+227,8,Lettuce -> Lettuce,71,Lettuce -> Lettuce (Single Crop),-71
+229,20,"Pumpkins -> Pumpkin, Winter Squash",21,Pumpkins -> Garden Vegetables  - general,-21
+230,"8,58",Dbl Crop Lettuce/Durum Wht -> Lettuce/Spring Wheat,"71,84",Dbl Crop Lettuce/Durum Wht -> Grain After Another Crop,-84
+231,"8,17",Dbl Crop Lettuce/Cantaloupe -> Lettuce/Cantaloupe,"71,83",Dbl Crop Lettuce/Cantaloupe -> Melons After Another Crop,-83
+232,"8,48",Dbl Crop Lettuce/Cotton -> Lettuce/Cotton,"71,79",Dbl Crop Lettuce/Cotton -> Cotton After Another Crop,-79
+233,"8,56",Dbl Crop Lettuce/Barley -> Lettuce/Barley,"71,84",Dbl Crop Lettuce/Barley -> Grain After Another Crop,-84
+234,"58,64",Dbl Crop Durum Wht/Sorghum -> Spring Wheat/Sorghum - grain,"71,78",Dbl Crop Durum Wht/Sorghum -> Sorghum After Another Crop,-78
+235,"56,64",Dbl Crop Barley/Sorghum -> Barley/Sorghum - grain,"71,78",Dbl Crop Barley/Sorghum -> Sorghum After Another Crop,-78
+236,"60,64",Dbl Crop WinWht/Sorghum -> Winter Wheat - with non-frozen soils/Sorghum - grain,"13,78",Dbl Crop WinWht/Sorghum -> Sorghum After Another Crop,-78
+237,"56,61","Dbl Crop Barley/Corn -> Barley/Maize, Field (grain) (field corn)","11,77",Dbl Crop Barley/Corn -> Field Corn After Another Crop,-77
+238,"48,60",Dbl Crop WinWht/Cotton -> Winter Wheat - with non-frozen soils/Cotton,"13,79",Dbl Crop WinWht/Cotton -> Cotton After Another Crop,-79
+239,"43,48",Dbl Crop Soybeans/Cotton -> Soybeans/Cotton,"66,79",Dbl Crop Soybeans/Cotton -> Cotton After Another Crop,-79
+240,"43,57",Dbl Crop Soybeans/Oats -> Soybeans/Oats,"66,84",Dbl Crop Soybeans/Oats -> Grain After Another Crop,-84
+241,"43,61","Dbl Crop Corn/Soybeans -> Maize, Field (grain) (field corn)/Soybeans","7,85",Dbl Crop Corn/Soybeans -> Soybeans After Another Crop,-85
+242,94,Blueberries -> Berries (bushes),63,Blueberries -> Blueberries,63
+243,3,Cabbage -> Cabbage,80,Cabbage -> Cabbage,-80
+244,5,Cauliflower -> Cauliflower,21,Cauliflower -> Garden Vegetables  - general,-21
+245,6,Celery -> Celery,21,Celery -> Garden Vegetables  - general,-21
+246,13,Radishes -> Radish,21,Radishes -> Garden Vegetables  - general,-21
+247,30,Turnips -> Turnip (and Rutabaga),21,Turnips -> Garden Vegetables  - general,-21
+248,14,Eggplants -> Egg Plant,21,Eggplants -> Garden Vegetables  - general,-21
+249,19,Gourds -> Cucumber - Machine harvest,21,Gourds -> Garden Vegetables  - general,-21
+250,94,Cranberries -> Berries (bushes),75,Cranberries -> Cranberries,75
+254,"43,56",Dbl Crop Barley/Soybeans -> Barley/Soybeans,"11,85",Dbl Crop Barley/Soybeans -> Soybeans After Another Crop,-85

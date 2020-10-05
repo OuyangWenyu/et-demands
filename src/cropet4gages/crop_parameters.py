@@ -8,6 +8,7 @@ Called by crop_et_data.py
 import logging
 import numpy as np
 
+
 class CropParameters:
     """Crop parameters container
 
@@ -61,8 +62,7 @@ class CropParameters:
         self.cn_fine_soil = float(crop_params_data[31])
 
         # Winter crop
-        if (self.class_number in [13, 14] or
-            'WINTER' in self.curve_name.upper()):
+        if self.class_number in [13, 14] or 'WINTER' in self.curve_name.upper():
             self.gdd_trigger_doy = 274
             self.winter_crop = True
         else:
@@ -93,8 +93,7 @@ class CropParameters:
             # Putting in a date_of_pl_or_gu of "10" will return Oct. 15th
             # Putting in a date_of_pl_or_gu of "4.8333" will return Apr. 25th
             self.month_of_pl_or_gu = int(self.date_of_pl_or_gu)
-            self.day_of_pl_or_gu = int(round(
-                (self.date_of_pl_or_gu - self.month_of_pl_or_gu) * 30.4))
+            self.day_of_pl_or_gu = int(round((self.date_of_pl_or_gu - self.month_of_pl_or_gu) * 30.4))
             if self.day_of_pl_or_gu < 0.5:
                 self.day_of_pl_or_gu = 15
             if self.month_of_pl_or_gu == 0:
@@ -107,9 +106,8 @@ class CropParameters:
 
         # Cuttings
         # Special case for ALFALFA   1 added 4/18/08
-        if (self.class_number in [1, 2, 3] or
-            (self.class_number >= 4 and
-             self.curve_name.upper() == "ALFALFA 1ST CYCLE")):
+        if self.class_number in [1, 2, 3] or (
+                self.class_number >= 4 and self.curve_name.upper() == "ALFALFA 1ST CYCLE"):
             self.cutting_crop = True
         else:
             self.cutting_crop = False
@@ -121,37 +119,6 @@ class CropParameters:
             output += "    {k} = {v}\n".format(k=key, v=self.__dict__[key])
         return output
         # return '<%s>' % (self.name)
-
-    # def __repr__(self):
-    #     """ """
-    #     sb = []
-    #     for key in self.__dict__:
-    #         sb.append("{key}='{value}'".format(key=key, value=self.__dict__[key]))
-    #     return '<%s>' % (self.name)
-
-    def set_winter_soil(self, crops=[]):
-        """
-
-        Attributes
-        ----------
-        crops : list
-
-
-        Returns
-        -------
-
-        Notes
-        -----
-        Not currently used
-
-        """
-
-        pass
-        # # setup curve number for antecedent II condition for winter covers
-        # wscc = self.winter_surface_cover_class
-        # self.cn_coarse_soil_winter = int(crop_params_path[29])
-        # self.cn_medium_soil_winter = int(crop_params_path[30])
-        # self.cn_fine_soil_winter   = int(crop_params_path[31])
 
 
 def read_crop_parameters(fn):
@@ -187,8 +154,9 @@ def read_crop_parameters(fn):
             crop_num = abs(int(crop_num))
         else:
             break
-        crops_dict[crop_num] = CropParameters(crop_param_data[:, crop_i+2])
+        crops_dict[crop_num] = CropParameters(crop_param_data[:, crop_i + 2])
     return crops_dict
+
 
 if __name__ == '__main__':
     pass

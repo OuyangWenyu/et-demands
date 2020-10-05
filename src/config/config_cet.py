@@ -68,6 +68,9 @@ __CET.CROP_ET.crop_params_name = "CropParams.txt"
 __CET.CROP_ET.crop_coefs_name = "fao56-table12.csv"
 __CET.CROP_ET.crop_coefs_path = os.path.join(__CET.CODE_ROOT_DIR, "prep", "preprocess4gages", "fao56_cropcoefs_eto.csv")
 __CET.CROP_ET.et_ratios_name = "ETrRatiosMon.txt"
+__CET.CROP_ET.cdl_crop_class_path = os.path.join(__CET.CODE_ROOT_DIR, "prep", "preprocess4gages", "cdl_crop_class.csv")
+__CET.CROP_ET.cdl_crosswalk_fao56_etd_path = os.path.join(__CET.CODE_ROOT_DIR, "prep", "preprocess4gages",
+                                                          "cdl_crosswalk_fao56_etd.csv")
 
 # Misc
 __CET.CROP_ET.elev_units = "Feet"

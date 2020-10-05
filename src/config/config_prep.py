@@ -21,7 +21,7 @@ __C.USDA.usda_site_folder = 'download/res'
 # Crop 176 is Grassland/Pasture in the new national CDL rasters
 # Crop 181 was Pasture/Hay in the old state CDL rasters
 # Crop 182 was Cultivated Crop in the old state CDL rasters
-__C.USDA.cdl_crops = "1-60, 66-80, 97-100, 204-254"
+__C.USDA.cdl_crops = "1-6, 10-14, 21-39, 41-60, 66-72, 74-77, 176, 204-214, 216-227, 229-250, 254"
 # cdl_nonag = "61-65, 81-96, 101-203, 255"
 
 # GAGES
@@ -82,7 +82,7 @@ __C.CROP_ET.crop_field = "CDL"
 
 # Crosswalk file to map CDL crops to ET-Demands crops
 # Crosswalk field names are hardcoded in the et_demands_zonal_stats.py
-__C.CROP_ET.crosswalk_path = os.path.join(__C.CODE_ROOT_DIR, "prep", "preprocess4gages", "cdl_crosswalk_fao56.csv")
+__C.CROP_ET.crosswalk_path = os.path.join(__C.CODE_ROOT_DIR, "prep", "preprocess4gages", "cdl_crosswalk_fao56_etd.csv")
 __C.CROP_ET.soil_crop_mask_flag = True
 __C.CROP_ET.save_crop_mask_flag = True
 

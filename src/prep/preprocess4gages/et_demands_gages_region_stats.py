@@ -51,8 +51,6 @@ def main(overwrite_flag=False):
 
     crop_field = config.CROP_ET.crop_field
 
-    crosswalk_path = config.CROP_ET.crosswalk_path
-
     soil_crop_mask_flag = config.CROP_ET.soil_crop_mask_flag
     save_crop_mask_flag = config.CROP_ET.save_crop_mask_flag
 
@@ -86,11 +84,6 @@ def main(overwrite_flag=False):
         logging.error(
             '\nERROR: The crop shapefile doesn\'t exist, exiting\n'
             '  {}'.format(crop_path))
-        sys.exit()
-    elif not os.path.isfile(crosswalk_path):
-        logging.error(
-            '\nERROR: The CDL Crosswalk file does not exist, exiting\n'
-            ' Check the filename:  {}'.format(crosswalk_path))
         sys.exit()
 
     # Scratch files
@@ -270,33 +263,13 @@ def main(overwrite_flag=False):
             'wkt': proj_geom.ExportToWkt(),
             'value': crop_ftr.GetField(crop_field),
         }
-    # crop_ds = None # running this line when debugging will lead to an unexpected error
-
-    # Read ET demands crop number crosswalk
-    # Link ET demands crop number (1-84) with input crop values (i.e. CDL)
-    # Key is input crop number, value is crop number, ignore comment
-    logging.info('\nReading Crop Crosswalk File\n  {}'.format(crosswalk_path))
-    cross_df = pd.read_csv(crosswalk_path)
-    cross_dict = dict()
-    for index, row in cross_df.iterrows():
-        # cross_dict[row.cdl_no] = list(map(int, str(row.etd_no).split(',')))
-        cross_dict[row.cdl_no] = list(map(int, str(row.fao56_no).split(',')))
-    # logging.debug(crop_num_dict)
 
     # Build the crop list
     # Because the spatial index is extent based,
     #   this may include crops that don't intersect the zones.
     input_crops = sorted(list(set(c['value'] for c in crop_dict.values())))
-    try:
-        etd_crops = sorted(list(set(
-            x for c in crop_dict.values() for x in cross_dict[c['value']])))
-    except KeyError as e:
-        logging.error('\nError: Input crop not found in crosswalk file. '
-                      'Missing Crop: {}\n Exiting.'.format(e))
-        sys.exit()
 
     logging.info('\nInput Crops: {}'.format(', '.join(map(str, input_crops))))
-    logging.info('Demands Crops: {}'.format(', '.join(map(str, etd_crops))))
 
     # Build the crop clipped ET zones shapefile
     # The shapefile only needs to be saved if the soils are being masked to
@@ -334,8 +307,8 @@ def main(overwrite_flag=False):
         zone_crop_area = 0
 
         # Initialize zonal stats crop acreages
-        for etd_crop in etd_crops:
-            field = 'CROP_{:03d}'.format(etd_crop)
+        for input_crop in input_crops:
+            field = 'CROP_{:03d}'.format(input_crop)
             crop_stats[zone_fid][field] = 0
         crop_stats[zone_fid][acreage_field] = 0
 
@@ -360,9 +333,8 @@ def main(overwrite_flag=False):
             zone_crop_area += clip_area
             zone_crop_polys.append(clip_poly)
 
-            for etd_crop in cross_dict[crop_value]:
-                field = 'CROP_{:03d}'.format(etd_crop)
-                crop_stats[zone_fid][field] += clip_area
+            field = 'CROP_{:03d}'.format(crop_value)
+            crop_stats[zone_fid][field] += clip_area
 
         if soil_crop_mask_flag or save_crop_mask_flag:
             # Combine all polygons/multipolygons into a single multipolygon
@@ -403,7 +375,7 @@ def main(overwrite_flag=False):
     crop_field_list = sorted(list(set([
         crop_field for zone_crop_dict in crop_stats.values()
         for crop_field in zone_crop_dict.keys()])))
-    logging.info('\nCrop Fields: {}'.format(', '.join(map(str, etd_crops))))
+    logging.info('\nCrop Fields: {}'.format(', '.join(map(str, input_crops))))
 
     logging.debug('\nAdding crop fields to zones shapefile')
     for crop_field in crop_field_list:

@@ -130,8 +130,11 @@ class CropETData:
         except:
             self.elev_units = 'feet'
 
-        # et cells properties
+        # usda cdl crop name
+        self.cdl_crop_class_path = config.CROP_ET.cdl_crop_class_path
+        self.cdl_crosswalk_fao56_etd_path = config.CROP_ET.cdl_crosswalk_fao56_etd_path
 
+        # et cells properties
         try:
             cell_properties_name = config.CROP_ET.cell_properties_name
             if cell_properties_name is None or cell_properties_name == 'None':
@@ -706,19 +709,15 @@ class CropETData:
 
         logging.info('  Reading crop parameters from\n' + self.crop_params_path)
 
-        params_df = pd.read_csv(self.crop_params_path,
-                                delimiter=self.crop_params_delimiter,
-                                header=None,
-                                skiprows=self.crop_params_header_lines - 1,
-                                na_values=['NaN'])
+        params_df = pd.read_csv(self.crop_params_path, delimiter=self.crop_params_delimiter, header=None,
+                                skiprows=self.crop_params_header_lines - 1, na_values=['NaN'])
         params_df.applymap(str)
         params_df.fillna('0', inplace=True)
         self.crop_params = {}
         for crop_i in range(2, len(list(params_df.columns))):
             crop_param_data = params_df[crop_i].values.astype(str)
             crop_num = abs(int(crop_param_data[1]))
-            self.crop_params[crop_num] = \
-                crop_parameters.CropParameters(crop_param_data)
+            self.crop_params[crop_num] = crop_parameters.CropParameters(crop_param_data)
 
         # Filter crop parameters based on skip and test lists
         # Filtering could happen in read_crop_parameters()

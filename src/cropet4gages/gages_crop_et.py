@@ -79,10 +79,9 @@ def main(log_level=logging.WARNING,
         data.gs_output_flag = True
 
     # Read crop type (aka class) specific parameters and coefficients
-    # Crop coefficients are constant for all cells
-    # Crop params can vary if CDL data are used but have base parameters
-    # File paths are read from INI
+    # Ids of Crop params are etd's !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     data.set_crop_params()
+    # Crop coefficients are constant for all cells
     data.set_crop_coeffs()
 
     # Read cell properties, crop flags and cuttings
@@ -354,6 +353,5 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-    main(log_level=args.log_level,
-         etcid_to_run=args.etcid, cal_flag=args.cal,
-         debug_flag=args.debug, mp_procs=args.multiprocessing)
+    main(log_level=args.log_level, etcid_to_run=args.etcid, cal_flag=args.cal, debug_flag=args.debug,
+         mp_procs=args.multiprocessing)

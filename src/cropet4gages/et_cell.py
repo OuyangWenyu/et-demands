@@ -6,10 +6,8 @@ Called by mod_crop_et.py
 
 """
 
-from collections import defaultdict
 import datetime
 import logging
-import math
 import os
 import re
 import sys
@@ -20,8 +18,7 @@ import shapefile
 
 from src.cropet4gages import util
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                             '../../lib')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../lib')))
 
 mpdToMps = 3.2808399 * 5280 / 86400
 
@@ -62,37 +59,30 @@ class ETCellData():
 
         """
 
-        logging.info('\nReading ET Cells properties data from\n' +
-                     data.cell_properties_path)
+        logging.info('\nReading ET Cells properties data from\n' + data.cell_properties_path)
         try:
-            df = pd.read_csv(data.cell_properties_path, engine='python',
-                             sep=data.cell_properties_delimiter,
+            df = pd.read_csv(data.cell_properties_path, engine='python', sep=data.cell_properties_delimiter,
                              dtype={'ET Cell ID': str, 'ET Cell Name': str, 'Ref ET MET ID': str})
             uc_columns = list(df.columns)
             columns = [x.lower() for x in uc_columns]
 
             # remove excess baggage from column names
 
-            columns = [x.replace(' (feet)', '').replace('in/hr', '').replace(
-                'in/ft', '').replace(' - in', '').replace('decimal ', '') for
-                       x in columns]
-            columns = [x.replace('met ', '').replace(' - ', '').replace(
-                " (a='coarse'  b='medium')", '').replace(
+            columns = [x.replace(' (feet)', '').replace('in/hr', '').replace('in/ft', '').replace(' - in', '').replace(
+                'decimal ', '') for x in columns]
+            columns = [x.replace('met ', '').replace(' - ', '').replace(" (a='coarse'  b='medium')", '').replace(
                 " (1='coarse' 2='medium')", '') for x in columns]
-            columns = [x.replace(' (fromhuntington plus google)', '').replace(
-                '  ', ' ') for x in columns]
+            columns = [x.replace(' (fromhuntington plus google)', '').replace('  ', ' ') for x in columns]
 
             # parse et cells properties for each cell
             for rc, row in df.iterrows():
                 # row_list = row.tolist()
                 cell = ETCell()
-                if not (cell.read_cell_properties_from_row(row.tolist(), columns,
-                                                           data.elev_units)):
+                if not (cell.read_cell_properties_from_row(row.tolist(), columns, data.elev_units)):
                     sys.exit()
                 self.et_cells_dict[cell.cell_id] = cell
         except:
-            logging.error('Unable to read ET Cells Properties from ' +
-                          data.cell_properties_path)
+            logging.error('Unable to read ET Cells Properties from ' + data.cell_properties_path)
             logging.error('\nERROR: ' + str(sys.exc_info()[0]) + 'occurred\n')
             sys.exit()
 
@@ -138,13 +128,16 @@ class ETCellData():
         irr_flags = all_data.iloc[:, 3].values
         crop_numbers = np.array(list(all_data.columns)[4:]).astype(int)
         a = all_data.iloc[:, 4:].values
-        fao56_crop_file = data.crop_coefs_path
-        crop_names = pd.read_csv(fao56_crop_file).values[:, 1]
+        # use usda crops' types as the crop names
+        cdl_crop_class_file = data.cdl_crop_class_path
+        cdl_crop_nums = pd.read_csv(cdl_crop_class_file).values[:, 0]
+        crop_num_idx = [i for i in range(crop_numbers.size) if crop_numbers[i] in cdl_crop_nums]
+        assert len(crop_num_idx) == crop_numbers.size
+        crop_names = pd.read_csv(cdl_crop_class_file).values[crop_num_idx, 2]
         for i, row in enumerate(a):
             cell_id = cell_ids[i]
             if cell_id not in self.et_cells_dict.keys():
-                logging.error('read_et_cells_crops(), cell_id %s not found'
-                              % cell_id)
+                logging.error('read_et_cells_crops(), cell_id %s not found' % cell_id)
                 sys.exit()
             cell = self.et_cells_dict[cell_id]
             # init_crops_from_row
@@ -157,8 +150,7 @@ class ETCellData():
             cell.crop_numbers = crop_numbers
             # Make list of active crop numbers (i.e. flag is True) in cell
 
-            cell.crop_num_list = sorted(
-                [k for k, v in cell.crop_flags.items() if v])
+            cell.crop_num_list = sorted([k for k, v in cell.crop_flags.items() if v])
             self.crop_num_list.extend(cell.crop_num_list)
 
         # Update list of active crop numbers in all cells
@@ -182,18 +174,15 @@ class ETCellData():
 
         """
 
-        logging.info('\nReading cell crop cuttings from\n' +
-                     data.cell_cuttings_path)
+        logging.info('\nReading cell crop cuttings from\n' + data.cell_cuttings_path)
         try:
             # Get list of 0 based line numbers to skip
             # Ignore header but assume header was set as 1's based index
-            skiprows = [i for i in range(data.cell_cuttings_header_lines)
-                        if i + 1 != data.cell_cuttings_names_line]
+            skiprows = [i for i in range(data.cell_cuttings_header_lines) if i + 1 != data.cell_cuttings_names_line]
 
             df = pd.read_csv(data.cell_cuttings_path, engine='python', na_values=['NaN'],
-                             header=data.cell_cuttings_names_line - len(skiprows) - 1,
-                             skiprows=skiprows, sep=data.cell_cuttings_delimiter,
-                             dtype={"ET Cell ID": str, "ET Cell Name": str})
+                             header=data.cell_cuttings_names_line - len(skiprows) - 1, skiprows=skiprows,
+                             sep=data.cell_cuttings_delimiter, dtype={"ET Cell ID": str, "ET Cell Name": str})
             uc_columns = list(df.columns)
             columns = [x.lower() for x in uc_columns]
             cell_col = columns.index('et cell id')
@@ -207,128 +196,18 @@ class ETCellData():
                 # cell_id = str(int(row[cell_col]))
                 # Handle both str and float/int inputs and remove .0 decimal
                 # https://docs.python.org/release/2.7.3/library/stdtypes.html#boolean-operations-and-or-not
-                cell_id = (str(row[cell_col])[-2:] == '.0' and
-                           str(row[cell_col])[:-2] or str(row[cell_col]))
+                cell_id = (str(row[cell_col])[-2:] == '.0' and str(row[cell_col])[:-2] or str(row[cell_col]))
 
                 if cell_id not in self.et_cells_dict.keys():
-                    logging.error('crop_et_data.static_mean_cuttings(), cell'
-                                  '_id %s not found' % cell_id)
+                    logging.error('crop_et_data.static_mean_cuttings(), cell_id %s not found' % cell_id)
                     sys.exit()
                 cell = self.et_cells_dict[cell_id]
                 cell.dairy_cuttings = int(row[dairy_col])
                 cell.beef_cuttings = int(row[beef_col])
         except:
-            logging.error('Unable to read ET Cells cuttings from ' +
-                          data.cell_cuttings_path)
+            logging.error('Unable to read ET Cells cuttings from ' + data.cell_cuttings_path)
             logging.error('\nERROR: ' + str(sys.exc_info()[0]) + 'occurred\n')
             sys.exit()
-
-    def filter_crops(self, data):
-        """filters crop list using crop_skip_list or crop_test_list from INI
-
-        Parameters
-        ---------
-        data : dict
-            configuration data from INI file
-
-        Returns
-        -------
-        None
-
-        Notes
-        -----
-
-        """
-
-        logging.info('\nFiltering crop lists')
-        crop_numbers = set(self.crop_num_list)
-
-        # Update master crop list
-        if data.annual_skip_flag:
-            annual_crops = set(
-                crop_num
-                for crop_num, crop_param in data.crop_params.items()
-                if not crop_param.is_annual)
-            crop_numbers &= annual_crops
-            logging.info('  Active perennial crops: {}'.format(
-                ', '.join(map(str, sorted(crop_numbers)))))
-        if data.perennial_skip_flag:
-            perennial_crops = set(
-                crop_num
-                for crop_num, crop_param in data.crop_params.items()
-                if crop_param.is_annual)
-            crop_numbers &= perennial_crops
-            logging.info('  Active annual crops: {}'.format(
-                ', '.join(map(str, sorted(crop_numbers)))))
-        if data.crop_skip_list:
-            logging.info('  Crop skip list: {}'.format(
-                ', '.join(map(str, data.crop_skip_list))))
-            crop_numbers -= set(data.crop_skip_list)
-        if data.crop_test_list:
-            logging.info('  Crop test list: {}'.format(
-                ', '.join(map(str, data.crop_test_list))))
-            crop_numbers &= set(data.crop_test_list)
-
-        # Get max length of CELL_ID for formatting of log string
-        cell_id_len = max([
-            len(cell_id) for cell_id in self.et_cells_dict.keys()])
-
-        # Filter each cell with updated master crop list
-        for cell_id, cell in sorted(self.et_cells_dict.items()):
-            cell.crop_num_list = sorted(
-                crop_numbers & set(cell.crop_num_list))
-            # Turn off the crop flag
-
-            cell.crop_flags = {
-                c: f and c in cell.crop_num_list
-                for c, f in cell.crop_flags.items()}
-            logging.info('  CellID: {1:{0}s}: {2}'.format(
-                cell_id_len, cell_id,
-                ', '.join(map(str, cell.crop_num_list))))
-
-    def filter_cells(self, data):
-        """Remove cells with no active crops
-
-        Parameters
-        ---------
-        data : dict
-            configuration data from INI file
-
-        Returns
-        -------
-        None
-
-        Notes
-        -----
-
-        """
-
-        logging.info('\nFiltering ET Cells')
-        cell_ids = set(self.et_cells_dict.keys())
-        if data.cell_skip_list:
-            cell_ids -= set(data.cell_skip_list)
-            logging.info('  Cell skip list: {}'.format(
-                ','.join(map(str, data.cell_skip_list))))
-        if data.cell_test_list:
-            cell_ids &= set(data.cell_test_list)
-            logging.info('  Cell test list: {}'.format(
-                ','.join(map(str, data.cell_test_list))))
-
-        # Get max length of CELL_ID for formatting of log string
-
-        cell_id_len = max([
-            len(cell_id) for cell_id in self.et_cells_dict.keys()])
-        for cell_id, cell in sorted(self.et_cells_dict.items()):
-            # Remove cells without any active crops
-
-            if cell_id not in cell_ids:
-                logging.info('  CellID: {1:{0}s} skipping'.format(
-                    cell_id_len, cell_id))
-                del self.et_cells_dict[cell_id]
-            elif not set(self.crop_num_list) & set(cell.crop_num_list):
-                logging.info('  CellID: {1:{0}s} skipping (no active crops)'.
-                             format(cell_id_len, cell_id))
-                del self.et_cells_dict[cell_id]
 
     def set_static_crop_params(self, crop_params):
         """set static crop parameters
@@ -398,15 +277,13 @@ class ETCellData():
 
         # Get list of crop parameter shapefiles DBFs
 
-        crop_dbf_dict = dict([
-            (int(item.split('_')[1]), os.path.join(calibration_ws, item))
-            for item in os.listdir(calibration_ws)
-            if crop_dbf_re.match(item)])
+        crop_dbf_dict = dict(
+            [(int(item.split('_')[1]), os.path.join(calibration_ws, item)) for item in os.listdir(calibration_ws)
+             if crop_dbf_re.match(item)])
 
         # Check to see if crop_dbf_dict is empty
         if not crop_dbf_dict:
-            logging.error('\nSpatially Varying Calibration Files Do Not Exist.'
-                          ' Run build_spatial_crop_params_arcpy.py')
+            logging.error('\nSpatially Varying Calibration Files Do Not Exist. Run build_spatial_crop_params_arcpy.py')
             sys.exit()
             # return False
 
@@ -424,8 +301,7 @@ class ETCellData():
         # if self.crop_num_list not in crop_dbf_dict.keys():
         # ###WHY DOESN't THIS WORK (Data Type Issue???)
         if len(missing_set) > 0:
-            logging.error(('\nMissing Crop Shapefiles In Calibration Folder. '
-                           'Re-Run build_spatial_crop_params_arcpy.py'))
+            logging.error('\nMissing Crop Shapefiles In Calibration Folder. Re-Run build_spatial_crop_params_arcpy.py')
             missing_set_str = ', '.join(str(s) for s in missing_set)
             logging.error(('Missing Crops: ' + missing_set_str))
             sys.exit()
@@ -487,8 +363,7 @@ class ETCellData():
             # Process using shapefile/pyshp
 
             crop_f = shapefile.Reader(crop_dbf)
-            crop_fields = [f[0] for f in crop_f.fields if f[0] !=
-                           'DeletionFlag']
+            crop_fields = [f[0] for f in crop_f.fields if f[0] != 'DeletionFlag']
 
             for record in crop_f.iterRecords():
                 # convert cell_id from .shp to str to match etcells type
@@ -496,9 +371,9 @@ class ETCellData():
 
                 # Skip cells
                 if cell_id not in self.et_cells_dict.keys():
-                    logging.info('CellID: {} not in et cell list. Not reading spatial'
-                                 ' crop parameters for this cell.'.format(
-                        cell_id))
+                    logging.info(
+                        'CellID: {} not in et cell list. Not reading spatial crop parameters for this cell.'.format(
+                            cell_id))
                     continue
                 for field_name, row_value in zip(crop_fields, record):
                     # DEADBEEF - I really want to skip non-crop parameter fields
@@ -514,33 +389,22 @@ class ETCellData():
                         cutting_name = None
                     if param_name is not None:
                         try:
-                            setattr(
-                                self.et_cells_dict[cell_id].crop_params[
-                                    crop_num], param_name, float(row_value))
-                            # print(self.et_cells_dict[cell_id].crop_params[
-                            #         crop_num], param_name, float(row_value))
-
+                            setattr(self.et_cells_dict[cell_id].crop_params[crop_num], param_name, float(row_value))
                         except:
                             logging.warning(
-                                ('  The spatial crop parameter was not '
-                                 'updated\n' + '    cell_id:    {0}\n'
-                                               '    crop_num:   {1}\n' +
-                                 '    field_name: {2}\n    parameter:  {3}').
-                                    format(cell_id, crop_num, field_name,
-                                           param_name))
+                                ('  The spatial crop parameter was not updated\n'
+                                 + '    cell_id:    {0}\n    crop_num:   {1}\n'
+                                 + '    field_name: {2}\n    parameter:  {3}').format(cell_id, crop_num, field_name,
+                                                                                      param_name))
                     elif cutting_name is not None:
                         try:
-                            setattr(
-                                self.et_cells_dict[cell_id],
-                                cutting_name, float(row_value))
+                            setattr(self.et_cells_dict[cell_id], cutting_name, float(row_value))
                         except:
                             logging.warning(
-                                ('  The spatial cutting parameter was not '
-                                 'updated\n' +
+                                ('  The spatial cutting parameter was not updated\n' +
                                  '    cell_id:    {0}\n    crop_num:   {1}\n' +
-                                 '    field_name: {2}\n    parameter:  {3}').
-                                    format(cell_id, crop_num, field_name,
-                                           cutting_name))
+                                 '    field_name: {2}\n    parameter:  {3}').format(cell_id, crop_num, field_name,
+                                                                                    cutting_name))
         return True
 
 
@@ -561,8 +425,7 @@ class ETCell():
 
     def __str__(self):
         """ """
-        return '<ETCell {0}, {1} {2}>'.format(
-            self.cell_id, self.cell_name, self.refet_id)
+        return '<ETCell {0}, {1} {2}>'.format(self.cell_id, self.cell_name, self.refet_id)
 
     def read_cell_properties_from_row(self, row, columns, elev_units='feet'):
         """ Parse row of data from ET Cells properties file
@@ -619,14 +482,12 @@ class ETCell():
         # Compute air pressure of station/cell
         self.air_pressure = util.pair_from_elev(0.3048 * self.elevation)
         if 'area weighted average permeability' in columns:
-            self.permeability = float(row[columns.index('area weighted average'
-                                                        ' permeability')])
+            self.permeability = float(row[columns.index('area weighted average permeability')])
         else:
             logging.error('Unable to read area weighted average permeability')
             return False
         if 'area weighted average whc' in columns:
-            self.stn_whc = float(row[columns.index('area weighted average'
-                                                   ' whc')])
+            self.stn_whc = float(row[columns.index('area weighted average whc')])
         else:
             logging.error('Unable to read area weighted average WHC')
             return False
@@ -636,14 +497,12 @@ class ETCell():
             logging.error('Unable to read average soil depth')
             return False
         if 'hydrologic group (a-c)' in columns:
-            self.stn_hydrogroup_str = str(row[columns.index('hydrologic group'
-                                                            ' (a-c)')])
+            self.stn_hydrogroup_str = str(row[columns.index('hydrologic group (a-c)')])
         else:
             logging.error('Unable to read Hydrologic Group (A-C)')
             return False
         if 'hydrologic group (1-3)' in columns:
-            self.stn_hydrogroup = int(row[columns.index('hydrologic group'
-                                                        ' (1-3)')])
+            self.stn_hydrogroup = int(row[columns.index('hydrologic group (1-3)')])
         else:
             logging.error('Unable to read Hydrologic Group (1-3)')
             return False
@@ -758,12 +617,10 @@ class ETCell():
             elif field_units.lower() in ['mpd', 'miles/d', 'miles/day']:
                 self.refet_df[field_key] /= mpdToMps
             else:
-                logging.error('\n ERROR: Unknown {0} units {1}'.format(
-                    field_key, field_units))
+                logging.error('\n ERROR: Unknown {0} units {1}'.format(field_key, field_units))
 
         # set date attributes
-        self.refet_df['doy'] = [int(ts.strftime('%j')) for ts in
-                                self.refet_df.index]
+        self.refet_df['doy'] = [int(ts.strftime('%j')) for ts in self.refet_df.index]
         return True
 
     def SF_P_refet_data(self, data):

@@ -14,6 +14,8 @@ import shutil
 import sys
 
 import pandas as pd
+
+import src.prep._util as util
 from src.prep import _arcpy
 from src.config.config_prep import cfg_prep
 
@@ -44,8 +46,6 @@ def main(area_threshold=0.25, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=
     soil_depth = 60  # inches
     aridity = 50
     irrigation = 1
-    # DEADBEEF - The number of crops should not be hardcoded here
-    crops = 123
 
     # Input paths
     # DEADBEEF - For now, get cropET folder from INI file
@@ -121,22 +121,18 @@ def main(area_threshold=0.25, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=
     crop_coefs_etr = 'CropCoefs_etr.txt'
     eto_ratio_name = 'EToRatiosMon.txt'
     etr_ratio_name = 'ETrRatiosMon.txt'
-    static_list = [crop_params_name, crop_coefs_name, crop_coefs_eto,
-                   crop_coefs_etr, cell_props_name, cell_crops_name,
+    static_list = [crop_params_name, crop_coefs_name, crop_coefs_eto, crop_coefs_etr, cell_props_name, cell_crops_name,
                    cell_cuttings_name, eto_ratio_name, etr_ratio_name]
 
     # Check input folders
     if not os.path.isdir(crop_et_ws):
-        logging.critical('\nERROR: The INI cropET folder does not exist'
-                         '\n  {}'.format(crop_et_ws))
+        logging.critical('\nERROR: The INI cropET folder does not exist\n  {}'.format(crop_et_ws))
         sys.exit()
     elif not os.path.isdir(project_ws):
-        logging.critical('\nERROR: The project folder does not exist'
-                         '\n  {}'.format(project_ws))
+        logging.critical('\nERROR: The project folder does not exist\n  {}'.format(project_ws))
         sys.exit()
     elif not os.path.isdir(gis_ws):
-        logging.critical('\nERROR: The GIS folder does not exist'
-                         '\n  {}'.format(gis_ws))
+        logging.critical('\nERROR: The GIS folder does not exist\n  {}'.format(gis_ws))
         sys.exit()
     logging.info('\nGIS Workspace:      {}'.format(gis_ws))
     logging.info('Project Workspace:  {}'.format(project_ws))
@@ -145,14 +141,12 @@ def main(area_threshold=0.25, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=
 
     # Check input files
     if not _arcpy.exists(et_cells_path):
-        logging.critical('\nERROR: The ET Cell shapefile does not exist'
-                         '\n  {}'.format(et_cells_path))
+        logging.critical('\nERROR: The ET Cell shapefile does not exist\n  {}'.format(et_cells_path))
         sys.exit()
     for static_name in static_list:
         if not os.path.isfile(os.path.join(template_ws, static_name)):
             logging.error(
-                '\nERROR: The static template does not exist'
-                '\n  {}'.format(os.path.join(template_ws, static_name)))
+                '\nERROR: The static template does not exist\n  {}'.format(os.path.join(template_ws, static_name)))
             sys.exit()
     logging.debug('ET Cells Path: {}'.format(et_cells_path))
 
@@ -182,8 +176,8 @@ def main(area_threshold=0.25, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=
     basin_data_dict = defaultdict(dict)
     basin_topo = pd.read_csv(config.GAGES.basin_topo_file, sep=',', dtype={0: str})
     for cell_id_tmp in list(cell_data_dict.keys()):
-        basin_data_dict[cell_id_tmp][basin_elev_field] = basin_topo.loc[
-            basin_topo[basin_id_filed] == cell_id_tmp, basin_elev_field].values[0]
+        basin_data_dict[cell_id_tmp][basin_elev_field] = \
+            basin_topo.loc[basin_topo[basin_id_filed] == cell_id_tmp, basin_elev_field].values[0]
     # Convert elevation units if necessary
     # logging.debug('  Convert station elevation from meters to feet')
     # for k in basin_data_dict.keys():
@@ -192,20 +186,13 @@ def main(area_threshold=0.25, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=
     # static files
     logging.info('\nCopying template static files')
     for static_name in static_list:
-        # if (overwrite_flag or
-        #         os.path.isfile(os.path.join(static_ws, static_name))):
         logging.debug('  {}'.format(static_name))
         shutil.copy(os.path.join(template_ws, static_name), static_ws)
-        # shutil.copyfile(
-        #     .path.join(template_ws, static_name),
-        #     .path.join(static_ws, crop_params_name))
 
     logging.info('\nWriting static text files')
     cell_props_path = os.path.join(static_ws, cell_props_name)
     cell_crops_path = os.path.join(static_ws, cell_crops_name)
     cell_cuttings_path = os.path.join(static_ws, cell_cuttings_name)
-    # crop_params_path = os.path.join(static_ws, crop_params_name)
-    # crop_coefs_path = os.path.join(static_ws, crop_coefs_name)
     eto_ratio_path = os.path.join(static_ws, eto_ratio_name)
     etr_ratio_path = os.path.join(static_ws, etr_ratio_name)
 
@@ -228,12 +215,13 @@ def main(area_threshold=0.25, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=
             del basin_id, basin_lat, basin_lon, basin_elev
 
     # Write cell crops
+    crops = util.parse_int_set(config.USDA.cdl_crops)
     logging.debug('  {}'.format(cell_crops_path))
     with open(cell_crops_path, 'a') as output_f:
         for cell_id, cell_data in sorted(cell_data_dict.items()):
             basin_id = cell_id
             output_list = [cell_id, cell_id, basin_id, irrigation]
-            crop_list = ['CROP_{:03d}'.format(i) for i in range(1, crops + 1)]
+            crop_list = ['CROP_{:03d}'.format(i) for i in crops]
             crop_area_list = []
             for crop in crop_list:
                 if crop in cell_data.keys() and cell_data[crop] is not None:
