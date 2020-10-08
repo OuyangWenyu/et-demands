@@ -225,6 +225,10 @@ class CropETData:
         self.crop_params_ws = ''
         self.crop_params_header_lines = 4
         self.crop_params_names_line = 3
+
+        # set additional crop params, the key points of 4 stages
+        self.crop_key_points_file = config.CROP_ET.crop_key_points_file
+
         # set crop coefficient specs
         try:
             crop_coefs_name = config.CROP_ET.crop_coefs_name
@@ -328,13 +332,13 @@ class CropETData:
 
         # For testing, allow the user to process a subset of cells
         try:
-            self.cell_skip_list = config.get(crop_et_sec, 'cell_skip_list').split(',')
+            self.cell_skip_list = config.CROP_ET.cell_skip_list.split(',')
             self.cell_skip_list = [c.strip() for c in self.cell_skip_list]
         except:
             logging.debug('    cell_skip_list = []')
             self.cell_skip_list = []
         try:
-            self.cell_test_list = config.get(crop_et_sec, 'cell_test_list').split(',')
+            self.cell_test_list = config.CROP_ET.cell_test_list.split(',')
             self.cell_test_list = [c.strip() for c in self.cell_test_list]
         except:
             logging.debug('    cell_test_list = False')
@@ -438,31 +442,31 @@ class CropETData:
 
         # output date formats and values formats
         try:
-            self.cet_out['daily_date_format'] = config.get(crop_et_sec, 'daily_date_format')
+            self.cet_out['daily_date_format'] = config.CROP_ET.daily_date_format
             if self.cet_out['daily_date_format'] is None or self.cet_out['daily_date_format'] == 'None':
                 self.cet_out['daily_date_format'] = '%Y-%m-%d'
         except:
             self.cet_out['daily_date_format'] = '%Y-%m-%d'
         try:
-            self.cet_out['daily_float_format'] = config.get(crop_et_sec, 'daily_float_format')
+            self.cet_out['daily_float_format'] = config.CROP_ET.daily_float_format
             if self.cet_out['daily_float_format'] == 'None':
                 self.cet_out['daily_float_format'] = None
         except:
             self.cet_out['daily_float_format'] = None
         try:
-            self.cet_out['monthly_date_format'] = config.get(crop_et_sec, 'monthly_date_format')
+            self.cet_out['monthly_date_format'] = config.CROP_ET.monthly_date_format
             if self.cet_out['monthly_date_format'] is None or self.cet_out['monthly_date_format'] == 'None':
                 self.cet_out['monthly_date_format'] = '%Y-%m'
         except:
             self.cet_out['monthly_date_format'] = '%Y-%m'
         try:
-            self.cet_out['monthly_float_format'] = config.get(crop_et_sec, 'monthly_float_format')
+            self.cet_out['monthly_float_format'] = config.CROP_ET.monthly_float_format
             if self.cet_out['monthly_float_format'] == 'None':
                 self.cet_out['monthly_float_format'] = None
         except:
             self.cet_out['monthly_float_format'] = None
         try:
-            self.cet_out['annual_date_format'] = config.get(crop_et_sec, 'annual_date_format')
+            self.cet_out['annual_date_format'] = config.CROP_ET.annual_date_format
             if self.cet_out['monthly_date_format'] is None or self.cet_out['monthly_date_format'] == 'None':
                 self.cet_out['annual_date_format'] = '%Y'
         except:
@@ -713,11 +717,15 @@ class CropETData:
                                 skiprows=self.crop_params_header_lines - 1, na_values=['NaN'])
         params_df.applymap(str)
         params_df.fillna('0', inplace=True)
+
+        crop_params_addition = pd.read_csv(self.crop_key_points_file)
+
         self.crop_params = {}
         for crop_i in range(2, len(list(params_df.columns))):
             crop_param_data = params_df[crop_i].values.astype(str)
             crop_num = abs(int(crop_param_data[1]))
-            self.crop_params[crop_num] = crop_parameters.CropParameters(crop_param_data)
+            crop_addition = crop_params_addition.iloc[crop_i - 2, [11, 12, 15, 16]]
+            self.crop_params[crop_num] = crop_parameters.CropParameters(crop_param_data, crop_addition)
 
         # Filter crop parameters based on skip and test lists
         # Filtering could happen in read_crop_parameters()
@@ -733,6 +741,8 @@ class CropETData:
                 if ((self.crop_skip_list and k not in self.crop_skip_list) or
                     (self.crop_test_list and k in self.crop_test_list) or
                     (k in non_crop_list))}
+
+        print("read crop params")
 
     def set_crop_coeffs(self):
         """ List of <CropCoeff> instances

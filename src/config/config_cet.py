@@ -71,6 +71,8 @@ __CET.CROP_ET.et_ratios_name = "ETrRatiosMon.txt"
 __CET.CROP_ET.cdl_crop_class_path = os.path.join(__CET.CODE_ROOT_DIR, "prep", "preprocess4gages", "cdl_crop_class.csv")
 __CET.CROP_ET.cdl_crosswalk_fao56_etd_path = os.path.join(__CET.CODE_ROOT_DIR, "prep", "preprocess4gages",
                                                           "cdl_crosswalk_fao56_etd.csv")
+__CET.CROP_ET.crop_key_points_file = os.path.join(__CET.CODE_ROOT_DIR, "prep", "preprocess4gages",
+                                                  "etd_crop_stage_points.csv")
 
 # Misc
 __CET.CROP_ET.elev_units = "Feet"

@@ -22,7 +22,7 @@ class CropParameters:
 
     """
 
-    def __init__(self, crop_params_data):
+    def __init__(self, crop_params_data, crop_addition_data=None):
 
         # If there is a comma in the string, it will also have quotes
         self.name = str(crop_params_data[0]).replace('"', '').strip()
@@ -60,6 +60,12 @@ class CropParameters:
         self.cn_coarse_soil = float(crop_params_data[29])
         self.cn_medium_soil = float(crop_params_data[30])
         self.cn_fine_soil = float(crop_params_data[31])
+
+        if crop_addition_data is not None:
+            self.ncgdd_for_dev = float(crop_addition_data[0])
+            self.ncgdd_for_late_season = float(crop_addition_data[1])
+            self.time_percent_for_dev = float(crop_addition_data[2])
+            self.time_percent_for_late_season = float(crop_addition_data[3])
 
         # Winter crop
         if self.class_number in [13, 14] or 'WINTER' in self.curve_name.upper():

@@ -1,124 +1,124 @@
-fao56_no,Crop,Init. (Lini),Dev. (Ldev),Mid (Lmid),Late (Llate),Total,Plant Date,Region
-1,Broccoli,35,45,40,15,135,Sept,"Calif. Desert, USA"
-2,Brussel Sprouts,0.7,1.05,0.95,0.4,,,
-3,Cabbage,40,60,50,15,165,Sept,"Calif. Desert, USA"
-4,Carrots,30,50,90,30,200,Oct,"Calif. Desert, USA"
-5,Cauliflower,35,50,40,15,140,Sept,"Calif. Desert, USA"
-6,Celery,25,40,95,20,180,Oct,(Semi)Arid
-7,Garlic,,,,,,,
-8,Lettuce,20,30,15,10,75,April,Mediterranean
-9,Onions - dry,20,35,110,45,210,Oct; Jan.,Arid Region; Calif.
-10,Onions - green,30,55,55,40,180,March,"Calif., USA"
-11,Onions - seed,20,45,165,45,275,Sept,"Calif. Desert, USA"
-12,Spinach,20,30,40,10,100,November,Arid Region
-13,Radish,10,10,15,5,40,Winter,Arid Region
-14,Egg Plant,30,40,40,20,130\140,October,Arid Region
-15,Sweet Peppers (bell),30,40,110,30,210,October,Arid Region
-16,Tomato,35,40,50,30,155,Apr/May,"Calif., USA"
-17,Cantaloupe,30,45,35,10,120,Jan,"Calif., USA"
-18,Cucumber - Fresh Market,20,30,40,15,105,June/Aug,Arid Region
-19,Cucumber - Machine harvest,25,35,50,20,130,Nov; Feb,Arid Region
-20,"Pumpkin, Winter Squash",20,30,30,20,100,"Mar, Aug",Mediterranean
-21,"Squash, Zucchini",25,35,25,15,100,Apr; Dec.,Medit.; Arid Reg.
-22,Sweet Melons,30,30,50,30,140,March,"Calif., USA"
-23,Watermelon,10,20,20,30,80,Mat/Aug,Near East (desert)
-24,"Beets, table",15,25,20,10,70,Apr/May,Mediterranean
-25,Cassava - year 1,20,40,90,60,210,Rainy,Tropical regions
-26,Cassava - year 2,150,40,110,60,360,season,
-27,Parsnip,,,,,,,
-28,Potato,30,35,50,25,140,Dec,"Calif. Desert, USA"
-29,Sweet Potato,20,30,60,40,150,April,Mediterranean
-30,Turnip (and Rutabaga),0.5,1.1,0.95,0.6,,,
-31,Sugar Beet,30,45,90,15,180,March,"Calif., USA"
-32,"Beans, green",20,30,30,10,90,Feb/Mar,"Calif., Mediterranean"
-33,"Beans, dry and Pulses",25,25,30,20,100,June,"Idaho, USA"
-34,Chick pea,0.4,1,0.35,0.4,,,
-35,Fababean (broad bean) - Fresh,15,25,35,15,90,May,Europe
-36,Fababean (broad bean) - Dry/Seed,20,30,35,15,100,Mar/Apr,Mediterranean
-37,Grabanzo,,,,,,,
-38,Green Gram and Cowpeas,20,30,30,20,110,March,Mediterranean
-39,Groundnut (Peanut),25,35,45,25,130,Dry season,West Africa
-40,Lentil,25,35,70,40,170,Oct/Nov,Arid Region
-41,Peas - Fresh,20,30,35,15,100,Mar/Apr,Mediterranean
-42,Peas - Dry/Seed,35,25,30,20,110,April,"Idaho, USA"
-43,Soybeans,20,30/35,60,25,140,May,Central USA
-44,Artichokes,"40,20","40,25","250,250","30,30","360,325","Apr (1st yr),May (2nd yr)",California (cut in May)
-45,Asparagus,"50,90","30,30","100,200","50,45","230,365",Feb,Warm Winter
-46,Mint,,,,,,,
-47,Strawberries,,,,,,,
-48,Cotton,30,50,60,55,195,Mar-May,Egypt; Pakistan; Calif.
-49,Flax,30,40,100,50,220,October,Arizona
-50,Sisal,,,,,,,
-51,Castorbean (Ricinus),25,40,65,50,180,March,(Semi)Arid Climates
-52,"Rapeseed, Canola",0.35,1.15,0.35,0.6,,,
-53,Safflower,20,35,45,25,125,April,"California, USA"
-54,Sesame,20,30,40,20,100,June,China
-55,Sunflower,25,35,45,25,130,April/May,Medit.; California
-56,Barley,20,50,60,30,160,Dec,"Calif. Desert, USA"
-57,Oats,0.3,1.15,0.25,1,,,
-58,Spring Wheat,,,,,,,
-59,Winter Wheat - with frozen soils,160,75,75,25,335,October,"Idaho, USA"
-60,Winter Wheat - with non-frozen soils,20,60,70,30,180,December,"Calif., USA"
-61,"Maize, Field (grain) (field corn)",30,40,50,50,170,April,"Idaho, USA"
-62,"Maize, Sweet  (sweet corn)",30,30,30,103,110,April,"Idaho, USA"
-63,Millet,20,30,55,35,140,April,Central USA
-64,Sorghum - grain,20,35,40,30,130,May/June,"USA, Pakis., Med."
-65,Sorghum - sweet,,,,,,,
-66,Rice,30,30,60,30,150,Dec; May,Tropics; Mediterranean
-67,Alfalfa Hay - averaged cutting effects,10,30,var.,var.,var.,,last  -4oC  in  spring until first -4oC in fall
-68,Alfalfa Hay - individual cutting periods,5,20,10,10,45,Jun,"Idaho, USA."
-69,Alfalfa Hay - for seed,,,,,,,
-70,Bermuda hay - averaged cutting effects,10,15,75,35,135,---,"Calif. Desert, USA"
-71,Bermuda hay - Spring crop for seed,10,25,35,35,105,March,"Calif. Desert, USA"
-72,"Clover hay, Berseem - averaged cutting effects",,,,,,,
-73,"Clover hay, Berseem - individual cutting periods",,,,,,,
-74,Rye Grass hay - averaged cutting effects,,,,,,,
-75,Sudan Grass hay (annual) - averaged cutting effects,,,,,,,
-76,Sudan Grass hay (annual) - individual cutting periods,25,25,15,10,75,Apr,"Calif. Desert, USA"
-77,Grazing Pasture - Rotated Grazing,10,20,--,--,--,,7 days before last -4oC in spring  until  7  days  after first -4oC in fall
-78,Grazing Pasture - Extensive Grazing,10,20,--,--,--,,7 days before last -4oC in spring  until  7  days  after first -4oC in fall
-79,Turf grass - cool season,,,,,,,
-80,Turf grass - warm season,,,,,,,
-81,Sugar Cane,35,60,190,120,405,,Low Latitudes
-82,Banana - 1st year,120,90,120,60,390,Mar,Mediterranean
-83,Banana - 2nd year,120,60,180,5,365,Feb,Mediterranean
-84,Cacao,,,,,,,
-85,Coffee - bare ground cover,,,,,,,
-86,Coffee - with weeds,,,,,,,
-87,Date Palms,,,,,,,
-88,Palm Trees,,,,,,,
-89,Pineapple - bare soil,,,,,,,
-90,Pineapple - with grass cover,60,120,600,10,790,,"Hawaii, USA"
-91,Rubber Trees,,,,,,,
-92,Tea - non-shaded,,,,,,,
-93,Tea - shaded,,,,,,,
-94,Berries (bushes),,,,,,,
-95,Grapes - Table or Raisin,20,50,75,60,205,Mar,"Calif., USA"
-96,Grapes - Wine,,,,,,,
-97,Hops,25,40,80,10,155,April,"Idaho, USA"
-98,"Almonds, no ground cover",,,,,,,
-99,"Apples, Cherries, Pears - no ground cover, killing frost",30,50,130,30,240,March,"Calif., USA"
-100,"Apples, Cherries, Pears - no ground cover, no frosts",,,,,,,
-101,"Apples, Cherries, Pears - active ground cover, killing frost",,,,,,,
-102,"Apples, Cherries, Pears - active ground cover, no frosts",,,,,,,
-103,"Apricots, Peaches, Stone Fruit - no ground cover, killing frost",30,50,130,30,240,March,"Calif., USA"
-104,"Apricots, Peaches, Stone Fruit - no ground cover, no frosts",,,,,,,
-105,"Apricots, Peaches, Stone Fruit - active ground cover, killing frost",,,,,,,
-106,"Apricots, Peaches, Stone Fruit - active ground cover, no frosts",,,,,,,
-107,"Avocado, no ground cover",,,,,,,
-108,"Citrus, no ground cover - 70% canopy",60,90,120,95,365,Jan,Mediterranean
-109,"Citrus, no ground cover - 50% canopy",,,,,,,
-110,"Citrus, no ground cover - 20% canopy",,,,,,,
-111,"Citrus, with active ground cover or weeds - 70% canopy",,,,,,,
-112,"Citrus, with active ground cover or weeds - 50% canopy",,,,,,,
-113,"Citrus, with active ground cover or weeds - 20% canopy",,,,,,,
-114,Conifer Trees,,,,,,,
-115,Kiwi,,,,,,,
-116,Olives (40 to 60% ground coverage by canopy),30,90,60,90,2705,March,Mediterranean
-117,"Pistachios, no ground cover",20,60,30,40,150,Feb,Mediterranean
-118,Walnut Orchard,20,10,130,30,190,April,"Utah, USA"
-119,"Cattails, Bulrushes, killing frost",,,,,,,
-120,"Cattails, Bulrushes, no frost",,,,,,,
-121,"Short Veg., no frost",,,,,,,
-122,"Reed Swamp, standing water",,,,,,,
-123,"Reed Swamp, moist soil",,,,,,,
+fao56_no,Crop,Init. (Lini),Dev. (Ldev),Mid (Lmid),Late (Llate),Total,Plant Date,Region,Type
+1,Broccoli,35,45,40,15,135,Sept,"Calif. Desert, USA",
+2,Brussel Sprouts,,,,,,,,
+3,Cabbage,40,60,50,15,165,Sept,"Calif. Desert, USA",
+4,Carrots,30,50,90,30,200,Oct,"Calif. Desert, USA",
+5,Cauliflower,35,50,40,15,140,Sept,"Calif. Desert, USA",
+6,Celery,25,40,95,20,180,Oct,(Semi)Arid,
+7,Garlic,,,,,,,,
+8,Lettuce,20,30,15,10,75,April,Mediterranean,
+9,Onions - dry,20,35,110,45,210,Oct; Jan.,Arid Region; Calif.,
+10,Onions - green,30,55,55,40,180,March,"Calif., USA",
+11,Onions - seed,20,45,165,45,275,Sept,"Calif. Desert, USA",
+12,Spinach,20,30,40,10,100,November,Arid Region,
+13,Radish,10,10,15,5,40,Winter,Arid Region,
+14,Egg Plant,30,40,40,20,130\140,October,Arid Region,
+15,Sweet Peppers (bell),30,40,110,30,210,October,Arid Region,
+16,Tomato,35,40,50,30,155,Apr/May,"Calif., USA",
+17,Cantaloupe,30,45,35,10,120,Jan,"Calif., USA",
+18,Cucumber - Fresh Market,20,30,40,15,105,June/Aug,Arid Region,
+19,Cucumber - Machine harvest,25,35,50,20,130,Nov; Feb,Arid Region,
+20,"Pumpkin, Winter Squash",20,30,30,20,100,"Mar, Aug",Mediterranean,
+21,"Squash, Zucchini",25,35,25,15,100,Apr; Dec.,Medit.; Arid Reg.,
+22,Sweet Melons,30,30,50,30,140,March,"Calif., USA",
+23,Watermelon,10,20,20,30,80,Mat/Aug,Near East (desert),
+24,"Beets, table",15,25,20,10,70,Apr/May,Mediterranean,
+25,Cassava - year 1,20,40,90,60,210,Rainy,Tropical regions,
+26,Cassava - year 2,150,40,110,60,360,season,,
+27,Parsnip,,,,,,,,
+28,Potato,30,35,50,25,140,Dec,"Calif. Desert, USA",
+29,Sweet Potato,20,30,60,40,150,April,Mediterranean,
+30,Turnip (and Rutabaga),,,,,,,,
+31,Sugar Beet,30,45,90,15,180,March,"Calif., USA",
+32,"Beans, green",20,30,30,10,90,Feb/Mar,"Calif., Mediterranean",
+33,"Beans, dry and Pulses",25,25,30,20,100,June,"Idaho, USA",
+34,Chick pea,,,,,,,,
+35,Fababean (broad bean) - Fresh,15,25,35,15,90,May,Europe,
+36,Fababean (broad bean) - Dry/Seed,20,30,35,15,100,Mar/Apr,Mediterranean,
+37,Grabanzo,,,,,,,,
+38,Green Gram and Cowpeas,20,30,30,20,110,March,Mediterranean,
+39,Groundnut (Peanut),25,35,45,25,130,Dry season,West Africa,
+40,Lentil,25,35,70,40,170,Oct/Nov,Arid Region,
+41,Peas - Fresh,20,30,35,15,100,Mar/Apr,Mediterranean,
+42,Peas - Dry/Seed,35,25,30,20,110,April,"Idaho, USA",
+43,Soybeans,20,30/35,60,25,140,May,Central USA,
+44,Artichokes,"40,20","40,25","250,250","30,30","360,325","Apr (1st yr),May (2nd yr)",California (cut in May),
+45,Asparagus,"50,90","30,30","100,200","50,45","230,365",Feb,Warm Winter,
+46,Mint,,,,,,,,
+47,Strawberries,,,,,,,,
+48,Cotton,30,50,60,55,195,Mar-May,Egypt; Pakistan; Calif.,
+49,Flax,30,40,100,50,220,October,Arizona,
+50,Sisal,,,,,,,,
+51,Castorbean (Ricinus),25,40,65,50,180,March,(Semi)Arid Climates,
+52,"Rapeseed, Canola",,,,,,,,
+53,Safflower,20,35,45,25,125,April,"California, USA",
+54,Sesame,20,30,40,20,100,June,China,
+55,Sunflower,25,35,45,25,130,April/May,Medit.; California,
+56,Barley,20,50,60,30,160,Dec,"Calif. Desert, USA",
+57,Oats,,,,,,,,
+58,Spring Wheat,10,100,,,,,,NCGDD
+59,Winter Wheat - with frozen soils,160,75,75,25,335,October,"Idaho, USA",
+60,Winter Wheat - with non-frozen soils,20,60,70,30,180,December,"Calif., USA",
+61,"Maize, Field (grain) (field corn)",30,40,50,50,170,April,"Idaho, USA",
+62,"Maize, Sweet  (sweet corn)",30,30,30,103,110,April,"Idaho, USA",
+63,Millet,20,30,55,35,140,April,Central USA,
+64,Sorghum - grain,20,35,40,30,130,May/June,"USA, Pakis., Med.",
+65,Sorghum - sweet,,,,,,,,
+66,Rice,30,30,60,30,150,Dec; May,Tropics; Mediterranean,
+67,Alfalfa Hay - averaged cutting effects,10,30,var.,var.,var.,,last  -4oC  in  spring until first -4oC in fall,
+68,Alfalfa Hay - individual cutting periods,5,20,10,10,45,Jun,"Idaho, USA.",
+69,Alfalfa Hay - for seed,,,,,,,,
+70,Bermuda hay - averaged cutting effects,10,15,75,35,135,---,"Calif. Desert, USA",
+71,Bermuda hay - Spring crop for seed,10,25,35,35,105,March,"Calif. Desert, USA",
+72,"Clover hay, Berseem - averaged cutting effects",,,,,,,,
+73,"Clover hay, Berseem - individual cutting periods",,,,,,,,
+74,Rye Grass hay - averaged cutting effects,,,,,,,,
+75,Sudan Grass hay (annual) - averaged cutting effects,,,,,,,,
+76,Sudan Grass hay (annual) - individual cutting periods,25,25,15,10,75,Apr,"Calif. Desert, USA",
+77,Grazing Pasture - Rotated Grazing,10,20,--,--,--,,7 days before last -4oC in spring  until  7  days  after first -4oC in fall,
+78,Grazing Pasture - Extensive Grazing,10,20,--,--,--,,7 days before last -4oC in spring  until  7  days  after first -4oC in fall,
+79,Turf grass - cool season,,,,,,,,
+80,Turf grass - warm season,,,,,,,,
+81,Sugar Cane,35,60,190,120,405,,Low Latitudes,
+82,Banana - 1st year,120,90,120,60,390,Mar,Mediterranean,
+83,Banana - 2nd year,120,60,180,5,365,Feb,Mediterranean,
+84,Cacao,,,,,,,,
+85,Coffee - bare ground cover,,,,,,,,
+86,Coffee - with weeds,,,,,,,,
+87,Date Palms,,,,,,,,
+88,Palm Trees,,,,,,,,
+89,Pineapple - bare soil,,,,,,,,
+90,Pineapple - with grass cover,60,120,600,10,790,,"Hawaii, USA",
+91,Rubber Trees,,,,,,,,
+92,Tea - non-shaded,,,,,,,,
+93,Tea - shaded,,,,,,,,
+94,Berries (bushes),,,,,,,,
+95,Grapes - Table or Raisin,20,50,75,60,205,Mar,"Calif., USA",
+96,Grapes - Wine,,,,,,,,
+97,Hops,25,40,80,10,155,April,"Idaho, USA",
+98,"Almonds, no ground cover",,,,,,,,
+99,"Apples, Cherries, Pears - no ground cover, killing frost",,,,,,,,
+100,"Apples, Cherries, Pears - no ground cover, no frosts",,,,,,,,
+101,"Apples, Cherries, Pears - active ground cover, killing frost",30,50,130,30,240,March,"Calif., USA",
+102,"Apples, Cherries, Pears - active ground cover, no frosts",,,,,,,,
+103,"Apricots, Peaches, Stone Fruit - no ground cover, killing frost",,,,,,,,
+104,"Apricots, Peaches, Stone Fruit - no ground cover, no frosts",,,,,,,,
+105,"Apricots, Peaches, Stone Fruit - active ground cover, killing frost",30,50,130,30,240,March,"Calif., USA",
+106,"Apricots, Peaches, Stone Fruit - active ground cover, no frosts",,,,,,,,
+107,"Avocado, no ground cover",,,,,,,,
+108,"Citrus, no ground cover - 70% canopy",,,,,,,,
+109,"Citrus, no ground cover - 50% canopy",,,,,,,,
+110,"Citrus, no ground cover - 20% canopy",,,,,,,,
+111,"Citrus, with active ground cover or weeds - 70% canopy",60,90,120,95,365,Jan,Mediterranean,
+112,"Citrus, with active ground cover or weeds - 50% canopy",,,,,,,,
+113,"Citrus, with active ground cover or weeds - 20% canopy",,,,,,,,
+114,Conifer Trees,,,,,,,,
+115,Kiwi,,,,,,,,
+116,Olives (40 to 60% ground coverage by canopy),30,90,60,90,2705,March,Mediterranean,
+117,"Pistachios, no ground cover",20,60,30,40,150,Feb,Mediterranean,
+118,Walnut Orchard,20,10,130,30,190,April,"Utah, USA",
+119,"Cattails, Bulrushes, killing frost",,,,,,,,
+120,"Cattails, Bulrushes, no frost",,,,,,,,
+121,"Short Veg., no frost",,,,,,,,
+122,"Reed Swamp, standing water",,,,,,,,
+123,"Reed Swamp, moist soil",,,,,,,,
