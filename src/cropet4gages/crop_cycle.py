@@ -90,6 +90,7 @@ def crop_cycle(data, et_cell, debug_flag=False, mp_procs=1):
     etd_crop_nums = cdl_crosswalk_fao56_etd.values[:, -1]
     cdl_fao_crop_nums_dict = dict(zip(cdl_crop_nums, fao_crop_nums))
     cdl_etd_crop_nums_dict = dict(zip(cdl_crop_nums, etd_crop_nums))
+    # Notice!: crop_count is different with crop_num. crop_count is the index, crop_num is the real usda cdl crop number
     crop_count = 0
     for crop_num in sorted(et_cell.crop_numbers):
         if et_cell.crop_flags[crop_num] == 0:
@@ -300,7 +301,7 @@ def write_crop_output(cdl_crop_num, data, et_cell, crop, foo):
     None
 
     """
-    cdl_crop_name = et_cell.crop_names[cdl_crop_num]
+    cdl_crop_name = et_cell.crop_names[et_cell.crop_numbers == cdl_crop_num][0]
 
     year_field = 'Year'
     month_field = 'Month'

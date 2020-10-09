@@ -96,7 +96,7 @@ def compute_crop_gdd(crop, foo, foo_day):
                 foo.gdd_penalty = 5.0
             else:
                 foo.gdd_penalty = 0.0
-            if foo_day.tmin < -25 and foo_day.snow_depth <= 0:
+            if foo_day.tmin < -25:
                 # Turn back on winter grain from severe cold if no snow cover (was 0.3)
                 foo.cgdd_penalty = foo.cgdd * 0.1
             else:
