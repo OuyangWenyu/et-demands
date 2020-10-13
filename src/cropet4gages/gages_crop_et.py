@@ -146,8 +146,7 @@ def main(log_level=logging.WARNING,
     cell_count = 0
     for cell_id, cell in sorted(cells.et_cells_dict.items()):
         if etcid_to_run == 'ALL' or etcid_to_run == cell_id:
-            logging.info('\nProcessing node id' + cell_id + ' with name ' +
-                         cell.cell_name)
+            logging.info('\nProcessing node id' + cell_id + ' with name ' + cell.cell_name)
             cell_count += 1
             if cell_mp_flag:
                 # Multiprocessing by cell
@@ -183,27 +182,21 @@ def main(log_level=logging.WARNING,
         logging.warning('\nMean Annual growing season start/end dates')
         for cell_id, cell in sorted(cells.et_cells_dict.items()):
             logging.warning('CellID: {}'.format(cell_id))
-            for crop_num, crop in sorted(cell.crop_params.items()):
+            for crop_num in sorted(cell.crop_numbers):
                 if cell.crop_flags[crop_num] == 0:
                     continue
-                gs_output_path = os.path.join(
-                    data.gs_output_ws, '{0}_gs_crop_{1:02d}.csv'.format(
-                        cell_id, int(crop.class_number)))
-                gs_df = pd.read_csv(gs_output_path, header=0, comment='#',
-                                    sep=',')
+                gs_output_path = os.path.join(data.gs_output_ws,
+                                              '{0}_gs_crop_{1:03d}.csv'.format(cell_id, int(crop_num)))
+                gs_df = pd.read_csv(gs_output_path, header=0, comment='#', sep=',')
                 # ignore first year to match gs summary output csv (added 8/27/2020)
-
                 # print(gs_df[1:])
-                gs_start_doy = int(round(gs_df[1:]['Start_DOY'].mean()))
-                gs_end_doy = int(round(gs_df[1:]['End_DOY'].mean()))
-                gs_start_dt = datetime.datetime.strptime(
-                    '2001_{:03d}'.format(gs_start_doy), '%Y_%j')
-                gs_end_dt = datetime.datetime.strptime(
-                    '2001_{:03d}'.format(gs_end_doy), '%Y_%j')
+                gs_start_doy = int(round(gs_df[:]['Start_DOY'].mean()))
+                gs_end_doy = int(round(gs_df[:]['End_DOY'].mean()))
+                gs_year_str = str(int(gs_df['Year'][0]))
+                gs_start_dt = datetime.datetime.strptime(gs_year_str + '_{:03d}'.format(gs_start_doy), '%Y_%j')
+                gs_end_dt = datetime.datetime.strptime(gs_year_str + '_{:03d}'.format(gs_end_doy), '%Y_%j')
                 logging.warning(
-                    ('  Crop {crop:2d}:' +
-                     '  {start_dt.month}/{start_dt.day} - {end_dt.month}/'
-                     '{end_dt.day}').format(
+                    ('  Crop {crop:3d}:' + '  {start_dt.month}/{start_dt.day} - {end_dt.month}/{end_dt.day}').format(
                         crop=crop_num, start_dt=gs_start_dt, end_dt=gs_end_dt))
 
 

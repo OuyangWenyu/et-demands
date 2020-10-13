@@ -406,7 +406,7 @@ def write_crop_output(cdl_crop_num, data, et_cell, crop, foo):
         daily_output_df[season_field] = daily_output_df[season_field].map(lambda x: ' %1d' % x)
         daily_output_path = os.path.join(data.cet_out['daily_output_ws'],
                                          data.cet_out['name_format'].replace(
-                                             '%c', '%02d' % int(cdl_crop_num)) % et_cell.cell_id)
+                                             '%c', '%03d' % int(cdl_crop_num)) % et_cell.cell_id)
 
         # Set output column order
         daily_output_columns = base_columns + [year_field, month_field, day_field, doy_field, pmet_field, etact_field,
@@ -422,7 +422,7 @@ def write_crop_output(cdl_crop_num, data, et_cell, crop, foo):
             daily_output_columns.append(cutting_field)
 
         with open(daily_output_path, open_mode, newline='') as daily_output_f:
-            daily_output_f.write('# {0:2d} - {1}\n'.format(cdl_crop_num, cdl_crop_name))
+            daily_output_f.write('# {0:3d} - {1}\n'.format(cdl_crop_num, cdl_crop_name))
             daily_output_df.to_csv(daily_output_f, header=print_header, index=print_index, sep=',',
                                    columns=daily_output_columns, float_format=data.cet_out['daily_float_format'],
                                    date_format=data.cet_out['daily_date_format'])
@@ -439,7 +439,7 @@ def write_crop_output(cdl_crop_num, data, et_cell, crop, foo):
             monthly_output_df[month_field] = monthly_output_df[month_field].map(lambda x: ' %2d' % x)
             monthly_output_df[season_field] = monthly_output_df[season_field].map(lambda x: ' %2d' % x)
         monthly_output_path = os.path.join(data.cet_out['monthly_output_ws'],
-                                           data.cet_out['name_format'].replace('%c', '%02d' % int(
+                                           data.cet_out['name_format'].replace('%c', '%03d' % int(
                                                cdl_crop_num)) % et_cell.cell_id)
         monthly_output_columns = base_columns + [year_field, month_field, pmet_field, etact_field, etpot_field,
                                                  etbas_field, kc_field, precip_field, season_field]
@@ -447,7 +447,7 @@ def write_crop_output(cdl_crop_num, data, et_cell, crop, foo):
             monthly_output_df[cutting_field] = monthly_output_df[cutting_field].map(lambda x: ' %1d' % x)
             monthly_output_columns.append(cutting_field)
         with open(monthly_output_path, open_mode, newline='') as monthly_output_f:
-            monthly_output_f.write('# {0:2d} - {1}\n'.format(cdl_crop_num, cdl_crop_name))
+            monthly_output_f.write('# {0:3d} - {1}\n'.format(cdl_crop_num, cdl_crop_name))
             monthly_output_df.to_csv(monthly_output_f, header=print_header, index=print_index, sep=',',
                                      columns=monthly_output_columns, float_format=data.cet_out['monthly_float_format'],
                                      date_format=data.cet_out['monthly_date_format'])
@@ -458,7 +458,7 @@ def write_crop_output(cdl_crop_num, data, et_cell, crop, foo):
         annual_output_df[year_field] = annual_output_df.index.year
         annual_output_df[season_field] = annual_output_df[season_field].map(lambda x: ' %3d' % x)
         annual_output_path = os.path.join(data.cet_out['annual_output_ws'],
-                                          data.cet_out['name_format'].replace('%c', '%02d' % int(
+                                          data.cet_out['name_format'].replace('%c', '%03d' % int(
                                               cdl_crop_num)) % et_cell.cell_id)
         annual_output_columns = base_columns + [year_field, pmet_field, etact_field, etpot_field, etbas_field, kc_field,
                                                 precip_field, season_field]
@@ -470,7 +470,7 @@ def write_crop_output(cdl_crop_num, data, et_cell, crop, foo):
             annual_output_df[cutting_field] = annual_output_df[cutting_field].map(lambda x: ' %2d' % x)
             annual_output_columns.append(cutting_field)
         with open(annual_output_path, open_mode, newline='') as annual_output_f:
-            annual_output_f.write('# {0:2d} - {1}\n'.format(cdl_crop_num, cdl_crop_name))
+            annual_output_f.write('# {0:3d} - {1}\n'.format(cdl_crop_num, cdl_crop_name))
             annual_output_df.to_csv(annual_output_f, header=print_header, index=False, sep=',',
                                     columns=annual_output_columns, float_format=data.cet_out['annual_float_format'],
                                     date_format=data.cet_out['annual_date_format'])
@@ -492,15 +492,15 @@ def write_crop_output(cdl_crop_num, data, et_cell, crop, foo):
         if data.gs_name_format is None:
             # default filename spec
             gs_output_path = os.path.join(data.gs_output_ws,
-                                          '{0}_gs_crop_{1:02d}.csv'.format(et_cell.cell_id, int(cdl_crop_num)))
+                                          '{0}_gs_crop_{1:03d}.csv'.format(et_cell.cell_id, int(cdl_crop_num)))
         else:
             # user filename spec or function of cet name spec
-            gs_output_path = os.path.join(data.gs_output_ws, data.gs_name_format.replace('%c', '%02d' % int(
+            gs_output_path = os.path.join(data.gs_output_ws, data.gs_name_format.replace('%c', '%03d' % int(
                 cdl_crop_num)) % et_cell.cell_id)
         gs_output_columns = [year_field, gs_start_doy_field, gs_end_doy_field, gs_start_date_field, gs_end_date_field,
                              gs_length_field]
         with open(gs_output_path, open_mode, newline='') as gs_output_f:
-            gs_output_f.write('# {0:2d} - {1}\n'.format(cdl_crop_num, cdl_crop_name))
+            gs_output_f.write('# {0:3d} - {1}\n'.format(cdl_crop_num, cdl_crop_name))
             try:
                 gs_start_doy = int(round(gs_output_df[gs_start_doy_field].mean()))
             except:
