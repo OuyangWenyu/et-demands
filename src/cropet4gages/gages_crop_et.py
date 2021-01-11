@@ -12,13 +12,13 @@ import os
 import sys
 import time
 import pandas as pd
-from src.config.config_cet import cfg_cet
+from src.config.config_cet import cfg_cet, crop_et_config
 from src.cropet4gages import util, crop_et_data, et_cell, crop_cycle
 
 
-def main(log_level=logging.WARNING,
-         etcid_to_run='ALL', debug_flag=False,
-         cal_flag=False, mp_procs=1):
+def crop_et_model(cfg_cet_used, log_level=logging.WARNING,
+                  etcid_to_run='ALL', debug_flag=False,
+                  cal_flag=False, mp_procs=1):
     """Main function for running crop ET model
 
     Parameters
@@ -67,7 +67,7 @@ def main(log_level=logging.WARNING,
     data = crop_et_data.CropETData()
 
     # Read INI file
-    data.read_cet_ini(cfg_cet)
+    data.read_cet_ini(cfg_cet_used)
 
     # Start file logging once INI file has been read
     if debug_flag:
@@ -187,7 +187,11 @@ def main(log_level=logging.WARNING,
                     continue
                 gs_output_path = os.path.join(data.gs_output_ws,
                                               '{0}_gs_crop_{1:03d}.csv'.format(cell_id, int(crop_num)))
-                gs_df = pd.read_csv(gs_output_path, header=0, comment='#', sep=',')
+                try:
+                    gs_df = pd.read_csv(gs_output_path, header=0, comment='#', sep=',')
+                except pd.errors.EmptyDataError:
+                    print("CellID: " + cell_id + " crop " + str(crop_num) + ": No growing")
+                    continue
                 # ignore first year to match gs summary output csv (added 8/27/2020)
                 # print(gs_df[1:])
                 gs_start_doy = int(round(gs_df[:]['Start_DOY'].mean()))
@@ -346,5 +350,8 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-    main(log_level=args.log_level, etcid_to_run=args.etcid, cal_flag=args.cal, debug_flag=args.debug,
-         mp_procs=args.multiprocessing)
+    shp_file_name = 'bas_ref_all.shp'
+    chosen_id_idx = [0, 10]
+    cfg_prep_new = crop_et_config(cfg_cet, shp_file_name, chosen_id_idx)
+    crop_et_model(cfg_prep_new, log_level=args.log_level, etcid_to_run=args.etcid, cal_flag=args.cal,
+                  debug_flag=args.debug, mp_procs=args.multiprocessing)

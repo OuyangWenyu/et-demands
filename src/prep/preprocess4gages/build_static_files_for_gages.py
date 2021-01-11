@@ -17,10 +17,10 @@ import pandas as pd
 
 import src.prep._util as util
 from src.prep import _arcpy
-from src.config.config_prep import cfg_prep
+from src.config.config_prep import cfg_prep, crop_et_config
 
 
-def main(area_threshold=0.25, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=False):
+def build_static_files(cfg_prep_used, area_threshold=0.25, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=False):
     """Build static text files needed to run ET-Demands model
 
     Parameters
@@ -50,7 +50,7 @@ def main(area_threshold=0.25, beef_cuttings=4, dairy_cuttings=5, overwrite_flag=
     # Input paths
     # DEADBEEF - For now, get cropET folder from INI file
     # This function may eventually be moved into the main cropET code
-    config = copy.deepcopy(cfg_prep)
+    config = copy.deepcopy(cfg_prep_used)
 
     try:
         project_ws = config.CROP_ET.project_folder
@@ -284,6 +284,8 @@ if __name__ == '__main__':
     logging.info('{0:<20s} {1}'.format(
         'Script:', os.path.basename(sys.argv[0])))
 
-    main(area_threshold=args.acres,
-         dairy_cuttings=args.dairy, beef_cuttings=args.beef,
-         overwrite_flag=args.overwrite)
+    shp_file_name = 'bas_ref_all.shp'
+    chosen_id_idx = [0, 10]
+    cfg_prep_new = crop_et_config(cfg_prep, shp_file_name, chosen_id_idx)
+    build_static_files(cfg_prep_new, area_threshold=args.acres, dairy_cuttings=args.dairy, beef_cuttings=args.beef,
+                       overwrite_flag=args.overwrite)

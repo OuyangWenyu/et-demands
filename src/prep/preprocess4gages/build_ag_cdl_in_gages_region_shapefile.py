@@ -15,11 +15,11 @@ from osgeo import gdal, ogr, osr
 
 import src.prep._arcpy as arcpy
 import src.prep._gdal_common as gdc
-from src.config.config_prep import cfg_prep
+from src.config.config_prep import cfg_prep, crop_et_config
 import src.prep._util as util
 
 
-def main(overwrite_flag=False):
+def build_cdl_shpfile(cfg_prep_used, overwrite_flag=False):
     """Build CDL shapefiles for agricultural pixels
 
     Parameters
@@ -32,7 +32,7 @@ def main(overwrite_flag=False):
     None
 
     """
-    config = copy.deepcopy(cfg_prep)
+    config = copy.deepcopy(cfg_prep_used)
     zone_path = config.CROP_ET.cells_path
     crop_path = config.CROP_ET.crop_path
     temp_path = crop_path.replace('.shp', '_temp.shp')
@@ -57,14 +57,10 @@ def main(overwrite_flag=False):
             return True
 
     if not os.path.isfile(zone_path):
-        logging.error(
-            '\nERROR: The ET zone shapefile doesn\'t exist, exiting\n'
-            '  {}'.format(zone_path))
+        logging.error('\nERROR: The ET zone shapefile doesn\'t exist, exiting\n  {}'.format(zone_path))
         sys.exit()
     elif not os.path.isfile(cdl_path):
-        logging.error(
-            '\nERROR: The CDL raster doesn\'t exist, exiting\n'
-            '  {}'.format(cdl_path))
+        logging.error('\nERROR: The CDL raster doesn\'t exist, exiting\n  {}'.format(cdl_path))
         sys.exit()
 
     logging.debug('Zones: {}'.format(zone_path))
@@ -104,8 +100,7 @@ def main(overwrite_flag=False):
     logging.debug('  Projection: {}'.format(zone_osr.ExportToWkt()))
     # logging.debug('  OSR: {}'.format(zones_osr))
     if zone_osr.IsGeographic():
-        logging.error('\nERROR: The ET zones shapefile must be in a projected '
-                      'coordinate system, exiting')
+        logging.error('\nERROR: The ET zones shapefile must be in a projected coordinate system, exiting')
         sys.exit()
 
     # Subset/clip properties
@@ -115,8 +110,7 @@ def main(overwrite_flag=False):
     logging.debug('  Projected:  {}'.format(clip_extent))
     # Adjust the clip extent to the CDL snap point and cell size
     clip_extent.buffer(10 * cdl_cs)
-    clip_extent.adjust_to_snap(snap_x=cdl_x, snap_y=cdl_y, cs=cdl_cs,
-                               method='EXPAND')
+    clip_extent.adjust_to_snap(snap_x=cdl_x, snap_y=cdl_y, cs=cdl_cs, method='EXPAND')
     logging.debug('  Snapped:    {}'.format(clip_extent))
     # Limit the subset extent to the CDL extent
     clip_extent.clip(cdl_extent)
@@ -308,4 +302,7 @@ if __name__ == '__main__':
     logging.info(log_f.format('Current Directory:', os.getcwd()))
     logging.info(log_f.format('Script:', os.path.basename(sys.argv[0])))
 
-    main(overwrite_flag=args.overwrite)
+    region_name = "some_from_all4test"
+    cfg_prep_new = crop_et_config(cfg_prep, region_name)
+
+    build_cdl_shpfile(cfg_prep_new, overwrite_flag=args.overwrite)

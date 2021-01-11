@@ -18,13 +18,13 @@ import rtree
 from shapely.ops import unary_union
 from shapely.wkt import loads
 
-from src.config.config_prep import cfg_prep
+from src.config.config_prep import cfg_prep, crop_et_config
 import src.prep._gdal_common as gdc
 import src.prep._util as util
 from src.prep import _arcpy
 
 
-def main(overwrite_flag=False):
+def cal_zonal_statistics(cfg_prep_used, overwrite_flag=False):
     """Calculate zonal statistics needed to run ET-Demands model
 
     Parameters
@@ -40,7 +40,7 @@ def main(overwrite_flag=False):
     """
     logging.info('\nComputing ET-Demands Zonal(gages region) Stats')
 
-    config = copy.deepcopy(cfg_prep)
+    config = copy.deepcopy(cfg_prep_used)
 
     gis_ws = config.CROP_ET.gis_folder
     zone_path = config.CROP_ET.cells_path
@@ -599,10 +599,12 @@ if __name__ == '__main__':
 
     logging.basicConfig(level=args.loglevel, format='%(message)s')
     logging.info('\n{}'.format('#' * 80))
-    logging.info('{0:<20s} {1}'.format(
-        'Run Time Stamp:', dt.datetime.now().isoformat(' ')))
+    logging.info('{0:<20s} {1}'.format('Run Time Stamp:', dt.datetime.now().isoformat(' ')))
     logging.info('{0:<20s} {1}'.format('Current Directory:', os.getcwd()))
-    logging.info('{0:<20s} {1}'.format(
-        'Script:', os.path.basename(sys.argv[0])))
+    logging.info('{0:<20s} {1}'.format('Script:', os.path.basename(sys.argv[0])))
 
-    main(overwrite_flag=args.overwrite)
+    shp_file_name = 'bas_ref_all.shp'
+    chosen_id_idx = [0, 10]
+    cfg_prep_new = crop_et_config(cfg_prep, shp_file_name, chosen_id_idx)
+
+    cal_zonal_statistics(cfg_prep_new, overwrite_flag=args.overwrite)

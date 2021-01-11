@@ -260,11 +260,10 @@ def kc_daily(data, et_cell, crop, foo, foo_day, debug_flag=False):
         # <------This kc loop only conducted if inside growing season
         # crop curve type:
         # 1 = NcumGDD, 2 = %PL-EC, 3 = %PL-EC, daysafter, 4 = %PL-Term
-
-        kc_curve_num = et_cell.crop_num_list[0]
-        kc_ini = et_cell.crop_coeffs[kc_curve_num]["Kc ini"]
-        kc_mid = et_cell.crop_coeffs[kc_curve_num]["Kc mid"]
-        kc_end = et_cell.crop_coeffs[kc_curve_num]["Kc end"]
+        # 先取出当前 crop 对应的 各阶段系数，在之前的src/cropet4gages/initialize_crop_cycle.py中的crop_load函数中都已经取出来了
+        kc_ini = foo.kc_ini
+        kc_mid = foo.kc_mid
+        kc_end = foo.kc_end
 
         # crop.curve_type Case 1 ####
         if crop.curve_type == 1:
@@ -317,7 +316,7 @@ def kc_daily(data, et_cell, crop, foo, foo_day, debug_flag=False):
                     foo.kc_bas = kc_mid + (kc_end - kc_mid) / (cgdd_term / cgdd_efc - ncgdd_late_season / 100) * (
                             foo.n_cgdd - ncgdd_late_season / 100)
                     if debug_flag:
-                        logging.debug('kc_daily(): kc_bas %.6f  kc_curve_num %d' % (foo.kc_bas, kc_curve_num))
+                        logging.debug('kc_daily(): kc_bas %.6f' % foo.kc_bas)
                 else:
                     # End of season by exceeding cumGDD for termination.
                     # Note that for cumGDD based crops,
@@ -417,38 +416,46 @@ def kc_daily(data, et_cell, crop, foo, foo_day, debug_flag=False):
         # crop.curve_type Case 3
         elif crop.curve_type == 3:
             # Percent of time from PL to EFC for before EFC and days after EFC after EFC
+            # 可以看到 CropCoefs.txt 有两列表头，第一列数字是给1-2-4三种情况的，第二列是给curve_type == 3的
+            # 第二列里有两组数据，一组是占从PL到EFC的时间的百分比，另一组是EFC之后的天数，不是百分比，不过这些我都用不到了
+            # 我的关键是，首先明确crop.time_for_efc，还有 crop.time_percent_for_dev，这样前面一半就知道怎么算了
+            # 后面一般要知道late的date以及harvest或者termination的date，这样后面一般才能算
             days_into_season = foo_day.doy - foo.doy_start_cycle + 1
             if days_into_season < 1:
                 days_into_season += 365
 
-            # Deal with values of zero or null - added Dec. 29, 2011, rga
+            # time_for_efc （time for EFC	days after pl or gu） 是length，如果是1，说明种上的时候作物就是成熟的，比如圣诞树
             crop.time_for_efc = max(crop.time_for_efc, 1.)
             foo.n_pl_ec = float(days_into_season) / crop.time_for_efc
-            if foo.n_pl_ec < 1:
-                int_pl_ec = min(int(foo.n_pl_ec * 10.), foo.max_lines_in_crop_curve_table - 1)
-                foo.kc_bas = (et_cell.crop_coeffs[curve_number].data[int_pl_ec] + (foo.n_pl_ec * 10 - int_pl_ec) *
-                              (et_cell.crop_coeffs[curve_number].data[int_pl_ec + 1] -
-                               et_cell.crop_coeffs[curve_number].data[int_pl_ec]))
-                logging.debug(
-                    'kcb_daily(): kc_bas %.6f  n_pl_ec %.6f  max_lines_in_crop_curve_table %d  int_pl_ec %d' %
-                    (foo.kc_bas, foo.n_pl_ec, foo.max_lines_in_crop_curve_table, int_pl_ec))
-            else:
-                DaysafterEFC = days_into_season - crop.time_for_efc
 
-                # In next line, make sure that "System.Math.Abs()" does not
-                #   change exact value for time_for_harvest() and that it is
-                #   taking absolute value.
-                # Use absolute value for time_for_harvest since neg means to
-                #   run until frost (Jan. 2007). also changed to <= from <
-                if DaysafterEFC <= abs(crop.time_for_harvest):
-                    # Start at array index = 11 for 0 days into full cover
-                    nDaysafterEFC = float(DaysafterEFC) / 10 + 11
-                    int_pl_ec = min(int(nDaysafterEFC), foo.max_lines_in_crop_curve_table - 1)
-                    foo.kc_bas = (et_cell.crop_coeffs[curve_number].data[int_pl_ec] + (nDaysafterEFC - int_pl_ec) *
-                                  (et_cell.crop_coeffs[curve_number].data[int_pl_ec + 1] -
-                                   et_cell.crop_coeffs[curve_number].data[int_pl_ec]))
-                    logging.debug('kcb_daily(): kc_bas %.6f  n_pl_ec %.6f  nDaysafterEFC %.6f  int_pl_ec %.6f' %
-                                  (foo.kc_bas, foo.n_pl_ec, nDaysafterEFC, int_pl_ec))
+            npl_ec100 = foo.n_pl_ec * 100
+            time_percent_for_dev = crop.time_percent_for_dev
+            days_after_efc_for_late_season = crop.days_after_efc_for_late_season
+            if abs(crop.time_for_harvest) < days_after_efc_for_late_season:
+                days_after_efc_for_late_season = abs(crop.time_for_harvest)
+
+            if foo.n_pl_ec < 1:
+                if npl_ec100 <= time_percent_for_dev:
+                    foo.kc_bas = kc_ini
+                else:
+                    foo.kc_bas = kc_ini + (npl_ec100 - time_percent_for_dev) * (kc_mid - kc_ini) / (
+                            100 - time_percent_for_dev)
+                logging.debug('kc_daily(): kc_bas %.6f  n_pl_ec %.6f' % (foo.kc_bas, foo.n_pl_ec))
+            else:
+                days_after_efc = days_into_season - crop.time_for_efc
+                # In next line, make sure that "System.Math.Abs()" does not change exact value for time_for_harvest()
+                # and that it is taking absolute value. Use absolute value for time_for_harvest since neg means
+                # to run until frost (Jan. 2007). also changed to <= from <
+                # 当crop_type=3的时候，貌似time_for_harvest的意思成了days after efc for harvest，所以修改下表的时候要注意
+                # src/prep/preprocess4gages/etd_crop_stage_points.csv
+                if days_after_efc <= abs(crop.time_for_harvest):
+                    if days_after_efc <= days_after_efc_for_late_season:
+                        foo.kc_bas = kc_mid
+                    else:
+                        foo.kc_bas = kc_mid + (kc_end - kc_mid) / (
+                                abs(crop.time_for_harvest) - days_after_efc_for_late_season) * (
+                                             days_after_efc - days_after_efc_for_late_season)
+                    logging.debug('kcb_daily(): kc_bas %.6f  n_pl_ec %.6f' % (foo.kc_bas, foo.n_pl_ec))
                 elif crop.time_for_harvest < -0.5:
                     # beyond stated end of season
                     # ------need provision to extend until frost termination
@@ -459,14 +466,14 @@ def kc_daily(data, et_cell, crop, foo, foo_day, debug_flag=False):
                     # use yesterday's kcb which should trace back to
                     # last valid day of stated growing season
                     foo.kc_bas = foo.kc_bas_prev
-                    logging.debug('kcb_daily(): kc_bas %.6f' % foo.kc_bas)
+                    logging.debug('kc_daily(): kc_bas %.6f' % foo.kc_bas)
                 else:
                     foo.in_season = False
                     logging.debug('kcb_daily(): curve_type 3  in_season %d' % foo.in_season)
 
         # crop.curve_type Case 4
         elif crop.curve_type == 4:
-            # print('CURVE TYPE 4')
+            # 这种目前没有用到！
             # Percent of time from PL to end of season
             # Note that type 4 kcb curve uses T30 to estimate GU
             #   and symmetry around July 15 to estimate total season length.

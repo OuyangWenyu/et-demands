@@ -62,10 +62,12 @@ class CropParameters:
         self.cn_fine_soil = float(crop_params_data[31])
 
         if crop_addition_data is not None:
+            # 这段是我自己为了中间的dev和late_season节点加的
             self.ncgdd_for_dev = float(crop_addition_data[0])
             self.ncgdd_for_late_season = float(crop_addition_data[1])
             self.time_percent_for_dev = float(crop_addition_data[2])
             self.time_percent_for_late_season = float(crop_addition_data[3])
+            self.days_after_efc_for_late_season = float(crop_addition_data[4])
 
         # Winter crop
         if self.class_number in [13, 14] or 'WINTER' in self.curve_name.upper():

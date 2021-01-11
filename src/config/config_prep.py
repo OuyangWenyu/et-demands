@@ -1,3 +1,4 @@
+import copy
 import os
 
 from easydict import EasyDict as edict
@@ -42,6 +43,7 @@ __C.GAGES.attrDir = os.path.join(__C.GAGES.GAGES_PATH, "basinchar_and_report_sep
 __C.GAGES.gage_files_dir = os.path.join(__C.GAGES.attrDir, 'spreadsheets-in-csv-format')
 __C.GAGES.gage_id_file = os.path.join(__C.GAGES.gage_files_dir, 'conterm_basinid.txt')
 __C.GAGES.basin_topo_file = os.path.join(__C.GAGES.gage_files_dir, 'conterm_topo.txt')
+__C.GAGES.basin_classif_file = os.path.join(__C.GAGES.gage_files_dir, 'conterm_bas_classif.txt')
 
 # NOAA RefET
 __C.NOAA = edict()
@@ -68,25 +70,29 @@ __C.SOILS.awc_path = os.path.join(__C.DATA_ROOT_DIR, 'common', 'soils', 'AWC_WTA
 __C.SOILS.clay_path = os.path.join(__C.DATA_ROOT_DIR, 'common', 'soils', 'Clay_WTA_0to152cm_statsgo.shp')
 __C.SOILS.sand_path = os.path.join(__C.DATA_ROOT_DIR, 'common', 'soils', 'Sand_WTA_0to152cm_statsgo.shp')
 
-# CROP ET setting
-__C.CROP_ET = edict()
-# __C.CROP_ET.region_name = "bas_nonref_MxWdShld"
-# __C.CROP_ET.region_shpfile_dir = __C.GAGES.gage_region_dir
-__C.CROP_ET.region_name = "some_from_mxwdshld"
-__C.CROP_ET.region_shpfile_dir = os.path.join(__C.DATA_ROOT_DIR, __C.CROP_ET.region_name)
-__C.CROP_ET.cells_path = os.path.join(__C.CROP_ET.region_shpfile_dir, __C.CROP_ET.region_name + '.shp')
-__C.CROP_ET.project_folder = os.path.join(__C.DATA_ROOT_DIR, __C.CROP_ET.region_name)
-__C.CROP_ET.gis_folder = os.path.join(__C.CROP_ET.project_folder, 'gis')
-__C.CROP_ET.crop_path = os.path.join(__C.CROP_ET.gis_folder, 'cdl_crops.shp')
-__C.CROP_ET.crop_field = "CDL"
 
-# Crosswalk file to map CDL crops to ET-Demands crops
-# Crosswalk field names are hardcoded in the et_demands_zonal_stats.py
-__C.CROP_ET.crosswalk_path = os.path.join(__C.CODE_ROOT_DIR, "prep", "preprocess4gages", "cdl_crosswalk_fao56_etd.csv")
-__C.CROP_ET.soil_crop_mask_flag = True
-__C.CROP_ET.save_crop_mask_flag = True
+def crop_et_config(old_config, region_name):
+    new_config = copy.deepcopy(old_config)
+    # CROP ET setting
+    new_config.CROP_ET = edict()
+    new_config.CROP_ET.region_name = region_name
+    new_config.CROP_ET.project_folder = os.path.join(new_config.DATA_ROOT_DIR, new_config.CROP_ET.region_name)
+    new_config.CROP_ET.cells_path = os.path.join(new_config.CROP_ET.project_folder,
+                                                 new_config.CROP_ET.region_name + '.shp')
 
-# ET-Demands folder
-__C.CROP_ET.crop_et_folder = os.path.join(__C.CODE_ROOT_DIR, "cropet4gages")
-__C.CROP_ET.refet_folder = os.path.join(__C.CROP_ET.project_folder, "climate")
-__C.CROP_ET.template_folder = os.path.join(__C.CODE_ROOT_DIR, "prep", "preprocess4gages", "template")
+    new_config.CROP_ET.gis_folder = os.path.join(new_config.CROP_ET.project_folder, 'gis')
+    new_config.CROP_ET.crop_path = os.path.join(new_config.CROP_ET.gis_folder, 'cdl_crops.shp')
+    new_config.CROP_ET.crop_field = "CDL"
+
+    # Crosswalk file to map CDL crops to ET-Demands crops
+    # Crosswalk field names are hardcoded in the et_demands_zonal_stats.py
+    new_config.CROP_ET.crosswalk_path = os.path.join(new_config.CODE_ROOT_DIR, "prep", "preprocess4gages",
+                                                     "cdl_crosswalk_fao56_etd.csv")
+    new_config.CROP_ET.soil_crop_mask_flag = True
+    new_config.CROP_ET.save_crop_mask_flag = True
+
+    # ET-Demands folder
+    new_config.CROP_ET.crop_et_folder = os.path.join(new_config.CODE_ROOT_DIR, "cropet4gages")
+    new_config.CROP_ET.refet_folder = os.path.join(new_config.CROP_ET.project_folder, "climate")
+    new_config.CROP_ET.template_folder = os.path.join(new_config.CODE_ROOT_DIR, "prep", "preprocess4gages", "template")
+    return new_config

@@ -90,20 +90,20 @@ class InitializeCropCycle:
 
         self.height = self.height_min
 
-        # Find maximum kc_bas in array for this crop (used later in height calc)
-        # kc_bas_mid is the maximum kc_bas found in the kc_bas table read into program
-        # Following code was repaired to properly parse crop curve arrays on 7/31/2012.  dlk
-
-        self.kc_mid = 0.
-
+        # Find maximum kc in array for this crop (used later in height calc)
+        # kc_mid is the maximum kc_bas found in the kc_bas table read into program
         # Bare soil etd=44, mulched soil etd=45, dormant turf/sod (winter) etd=46 do not have curve
-
-        if crop.curve_number > 0:
-            fao_crop_num = [int(i) for i in cdl_fao_etd_crop_num[1].split(",")]
-            if len(fao_crop_num) > 1:
-                self.kc_mid = np.mean([et_cell.crop_coeffs[j]["Kc mid"] for j in fao_crop_num])
-            else:
-                self.kc_mid = et_cell.crop_coeffs[fao_crop_num[0]]["Kc mid"]
+        # 我这不管 curve_number 大不大于0(Negative is annual; Positive is perennial)，都要计算出 kc_ini, kc_mid 和 kc_end
+        # if crop.curve_number > 0:
+        fao_crop_num = [int(i) for i in cdl_fao_etd_crop_num[1].split(",")]
+        if len(fao_crop_num) > 1:
+            self.kc_ini = np.mean([et_cell.crop_coeffs[j]["Kc ini"] for j in fao_crop_num])
+            self.kc_mid = np.mean([et_cell.crop_coeffs[j]["Kc mid"] for j in fao_crop_num])
+            self.kc_end = np.mean([et_cell.crop_coeffs[j]["Kc end"] for j in fao_crop_num])
+        else:
+            self.kc_ini = et_cell.crop_coeffs[fao_crop_num[0]]["Kc ini"]
+            self.kc_mid = et_cell.crop_coeffs[fao_crop_num[0]]["Kc mid"]
+            self.kc_end = et_cell.crop_coeffs[fao_crop_num[0]]["Kc end"]
 
         # Irrigation flag
         # CGM - How are these different?

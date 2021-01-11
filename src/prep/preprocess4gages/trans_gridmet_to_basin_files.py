@@ -1,4 +1,5 @@
 import fnmatch
+import logging
 import os
 import shutil
 
@@ -8,14 +9,12 @@ from src.config.config_prep import cfg_prep
 import geopandas as gpd
 
 
-def choose_some_gauge():
-    shpfile = cfg_prep.CROP_ET.cells_path
+def choose_some_gauge(shpfile, output_dir):
     shape_data = gpd.read_file(shpfile)
     shape_data_sort = shape_data.sort_values(by="GAGE_ID")
     gages_id = shape_data_sort['GAGE_ID'].values
 
     data_dir = cfg_prep.GRIDMET.origin_gridmet_folder
-    output_dir = cfg_prep.CROP_ET.refet_folder
     if not os.path.isdir(output_dir):
         os.mkdir(output_dir)
 
@@ -24,7 +23,9 @@ def choose_some_gauge():
     gage_fld_lst = data_all.columns.values
     df_id_region = data_all.iloc[:, 0].values
     xy, ind1, ind2 = np.intersect1d(df_id_region, gages_id, return_indices=True)
-    assert xy.size == len(gages_id)
+    if xy.size != len(gages_id):
+        logging.warning(
+            '\nWARN: not all sites in the given shapefile were chosen because they don\'t belong to GAGES-II')
     data = data_all.iloc[ind1, :]
     gage_dict = dict()
     for s in gage_fld_lst:
@@ -32,7 +33,7 @@ def choose_some_gauge():
             gage_dict[s] = data[s].values.tolist()
         else:
             gage_dict[s] = data[s].values
-    for j in range(len(gages_id)):
+    for j in range(len(xy)):
         huc_id = gage_dict['HUC02'][j]
         data_huc_dir = os.path.join(data_dir, huc_id)
         src = os.path.join(data_huc_dir, gage_dict['STAID'][j] + '_lump_gridmet_forcing.txt')
@@ -41,13 +42,12 @@ def choose_some_gauge():
         shutil.copy(src, dst)
 
 
-def trans_all_forcing_file_to_camels(t_range):
-    """the function need to be run region by region"""
+def trans_all_forcing_file_to_camels(t_range, region_name):
+    """the function need to be run for every region"""
     output_dir = cfg_prep.GRIDMET.origin_gridmet_folder
     if not os.path.isdir(output_dir):
         os.mkdir(output_dir)
 
-    region_name = "MxWdShld"  # cfg_prep.CROP_ET.region_name.split("_")[-1]
     # forcing data file generated is named as "allref", so rename the "all"
     if region_name == "all":
         region_name = "allref"
@@ -83,11 +83,9 @@ def trans_all_forcing_file_to_camels(t_range):
 
 def trans_gridmet_to_basins_files(daymet_dir, output_dir, gage_dict, region, year):
     """transform forcing data of gridmet formats to the one in camels dataset"""
-    # don't change!
-    name_dataset = ['gage_id', "time_start", "pr", "rmax", "rmin", "sph", "srad", "th", "tmmn", 'tmmx', 'vs', 'erc',
-                    'eto', 'bi', 'fm100', 'fm1000', 'etr', 'vpd']
-    camels_index = ['Year', 'Mnth', 'Day', 'Hr', "pr", "rmax", "rmin", "sph", "srad", "th", "tmmn", 'tmmx', 'vs', 'erc',
-                    'eto', 'bi', 'fm100', 'fm1000', 'etr', 'vpd']
+    # don't change! I only chose some items for GRIDMET dateset
+    name_dataset = ['gage_id', "time_start", "pr", "rmin", "srad", "tmmn", 'tmmx', 'vs', 'eto', 'etr']
+    camels_index = ['Year', 'Mnth', 'Day', 'Hr', "pr", "rmin", "srad", "tmmn", 'tmmx', 'vs', 'eto', 'etr']
     for f_name in os.listdir(daymet_dir):
         if fnmatch.fnmatch(f_name, 'gridmet_' + region + '_mean_' + str(year) + '.csv'):
             data_file = os.path.join(daymet_dir, f_name)
@@ -121,6 +119,19 @@ def trans_gridmet_to_basins_files(daymet_dir, output_dir, gage_dict, region, yea
 
 
 if __name__ == "__main__":
-    t_range = ["2008-01-01", "2009-01-01"]
-    # trans_all_forcing_file_to_camels(t_range)
-    choose_some_gauge()
+    # if firstly use this script, should manually set not_trans_yet to True
+    not_trans_yet = False
+    t_range = ["2008-01-01", "2018-01-01"]
+    regions_str = ["allref", "CntlPlains", "EastHghlnds", "MxWdShld", "NorthEast", "SECstPlain", "SEPlains", "WestMnts",
+                   "WestPlains", "WestXeric"]
+    if not_trans_yet:
+        for region_tmp in regions_str:
+            trans_all_forcing_file_to_camels(t_range, region_tmp)
+    else:
+        region_name = "some_from_all4test"
+
+        project_folder = os.path.join(cfg_prep.DATA_ROOT_DIR, region_name)
+        cells_path = os.path.join(project_folder, region_name + '.shp')
+        refet_folder = os.path.join(project_folder, "climate")
+
+        choose_some_gauge(cells_path, refet_folder)

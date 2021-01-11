@@ -91,4 +91,6 @@ et-demands/refET/bin/.ipynb_checkpoints/Untitled-checkpoint.ipynb
 et-demands/refET/bin/TmaxMon.csv
 examples/huc8/gis/WBDHU8_32612.dbf
 /examples/gages/
+/examples/bas_*_*/
+/examples/from_bas_*_*/
 /examples/some_from_*/

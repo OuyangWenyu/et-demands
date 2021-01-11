@@ -724,7 +724,9 @@ class CropETData:
         for crop_i in range(2, len(list(params_df.columns))):
             crop_param_data = params_df[crop_i].values.astype(str)
             crop_num = abs(int(crop_param_data[1]))
-            crop_addition = crop_params_addition.iloc[crop_i - 2, [11, 12, 15, 16]]
+            # read NCGDD for development/NCGDD for late season
+            # and Time percent to EFC for development/Time percent to EFC for late season/Days after EFC for late season
+            crop_addition = crop_params_addition.iloc[crop_i - 2, [11, 12, 15, 16, 17]]
             self.crop_params[crop_num] = crop_parameters.CropParameters(crop_param_data, crop_addition)
 
         # Filter crop parameters based on skip and test lists

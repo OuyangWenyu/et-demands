@@ -178,8 +178,7 @@ def crop_day_loop(crop_count, data, et_cell, cdl_fao_etd_crop_num, debug_flag=Fa
     # 'foo' is holder of all these global variables for now
     foo = InitializeCropCycle()
 
-    # First time through for crop, load basic crop parameters and
-    # process climate data
+    # First time through for crop, load basic crop parameters and process climate data
     foo.crop_load(data, et_cell, cdl_fao_etd_crop_num)
 
     # Initialize crop data frame

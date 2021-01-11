@@ -1,90 +1,90 @@
-Parameter,Crop number and flag for crop type,Crop curve number,Crop curve name,Crop curve type,Flag for means to estimate pl or gu,T30 for pl or gu   or CGDD for pl or gu,Date of pl or gu  (can be blank),For NCGDD based curves: Tbase:,CGDD for EFC,CGDD for termination,NCGDD for development,NCGDD for late season,time for EFC,time for harvest (neg to extend until frost),Time percent to EFC for development,Time percent to EFC for late season
-Alfalfa Hay - (typical style),1,13,Alfalfa 1st cycle,1,1,310,,0,900,850,0,100,,-240,,
-Alfalfa Hay - frequent dairy style ~4 cuttings,2,13,Alfalfa 1st cycle,1,1,240,,0,700,650,0,100,,-240,,
-Alfalfa Hay,3,13,Alfalfa 1st cycle,1,1,370,,0,850,1000,0,100,,-240,,
-Grass Hay,4,19,Grass Hay,1,2,12,,0,1300,4500,0,100,,-250,,
-Snap and Dry Beans - fresh,-5,12,"Snap Beans, fresh",1,2,13,,5,670,1200,0,120,,,,
-Snap and Dry Beans - seed,-6,11,"Snap Beans, seed",1,2,21.27,,5,670,1350,0,120,,,,
-Field Corn (moderate lengthed season),-7,8,Field Corn,1,2,15.09,,-10,700,1750,20,140,,210,,
-Silage Corn (field corn but with truncated season),-8,9,Sileage Corn,1,2,13,,-10,500,1100,20,140,,210,,
-Sweet Corn -- early,-9,10,Sweet Corn,1,2,14.43,,-10,600,1100,20,110,,210,,
-Sweet Corn -- late,-10,10,Sweet Corn,1,2,12,,-10,500,1000,20,110,,210,,
-Spring Grain - Irrigated,-11,1,Spring wheat,1,2,7,,0,880,2040,10,160,,210,,
-Spring Grain - Rainfed,-12,1,Spring wheat,1,2,5,,0,800,2050,10,160,,210,,
-Winter Grain - Irrigated,-13,2,Winter Wheat,1,3,,10,0,1150,2000,10,130,,,,
-Winter Grain - Rainfed,-14,2,Winter Wheat,1,3,,10,0,1100,1800,10,130,,,,
-Grass Pasture (High Management),15,30,"Pasture, Rotated",3,2,10,,,,,,,50,-220,0,180
-Grass Pasture (Low Management),16,31,"Pasture, Low Manag.",3,2,6.85,,,,,,,50,-220,0,190
-Turfgrass (lawns) - Irrig.,17,29,Lawn,2,2,10,,,,,,,60,-270,0,270
-Turfgrass (lawns) - Rainfed,18,29,Lawn,2,2,10,,,,,,,60,-270,0,270
-Orchards - Apples and Cherries w/ground cover,19,24,"Apples, GC",2,2,8,,,,,,,130,320,0,210
-Orchards - Apples and Cherries no ground cover,20,25,"Apples, no GC",2,2,8,,,,,,,130,320,10,210
-Garden Vegetables (general),-21,20,Onions,2,2,10,,,,,,,80,200,20,160
-Carrots,-22,20,Onions,2,2,9,,,,,,,80,200,20,160
-Onions,-23,20,Onions,2,2,19,,,,,,,70,205,20,160
-Melons,-24,22,Melons,2,2,21,,,,,,,70,190,10,270
-Grapes--wine,25,21,Winegrapes,2,2,10.5,,,,,,,120,180,0,180
-Alfalfa Seed,26,33,Alfalfa Seed,3,1,240,,0,,,,,80,100,0,140
-Peas--fresh,-27,4,"Peas, fresh",1,2,10.5,,0,637,1300,0,120,,,,
-Peas--seed,-28,3,"Peas, seed",1,2,21.27,,0,800,2200,0,120,,,,
-Potatoes - processing (early harvest),-29,7,Potatoes Processing,1,2,10.5,,5,800,1600,20,110,,,,
-Potatoes - baking (late harvest),-30,6,Potatoes - Late (baking),1,2,10.5,,5,800,2150,20,120,,,,
-Sugar beets,-31,5,Sugar Beets,1,2,11,,0,970,2700,10,130,,,,
-Hops,32,23,Hops,2,1,600,,0,,,,,100,200,20,130
-Mint,33,18,Mint,1,1,600,,0,1400,4000,0,100,,,,
-Poplar (third year and older),34,34,Poplar,3,2,10.5,,,,,,,21,-200,,
-Lentils,-35,17,Lentils,1,2,10.5,,0,935,2160,10,160,,,,
-Sunflower - Irrigated,-36,28,Sunflower/Safflower,2,2,21.09,,,,,,,70,190,20,130
-Sunflower - Rainfed,-37,28,Sunflower/Safflower,2,2,13.5,,,,,,,70,190,20,130
-Safflower - Irrigated,-38,28,Sunflower/Safflower,2,2,11,,,,,,,70,190,20,130
-Safflower - Rainfed,-39,28,Sunflower/Safflower,2,2,11,,,,,,,70,190,20,130
-Canola,40,27,Canola,2,2,8,,,,,,,55,170,20,130
-Mustard,-41,27,Mustard,2,3,11,4.83,,,,,,55,190,20,130
-BlueGrass Seed,42,32,BlueGrass Seed,3,2,10.5,,,,,,,35,-230,,
-Garlic,-43,26,Garlic,2,2,10,,,,,,,80,170,20,140
-Bare soil,44,0,,0,4,,,,,,,,,,,
-Mulched soil / wheat stubble,45,0,,0,4,,,,,,,,,,,
-Dormant turf/sod (winter time),46,0,,0,4,,,,,,,,,,,
-Range Grasses- early short season (cheat etc.),47,38,cheatgrass,4,2,10.5,-10,,,,,,,,,
-"Range Grasses- long season (bunch - wheatgrass, etc.)",48,39,bunchgrass,4,2,10.5,-10,,,,,,,,,
-Range Grasses - brome grass,49,40,Bromegrass,4,2,10.5,-10,,,,,,,,,
-Sagebrush,50,37,Sage,4,2,10.5,-10,,,,,,,,,
-Wetlands--large stands,51,35,"Wetlands, Large Stand",3,2,15,,,,,,,45,-200,,
-Wetlands--narrow stands,52,36,"Wetlands, Small Stand",3,2,15,,,,,,,45,-200,,
-Cottonwoods,53,41,Cottonwood,2,2,8,,,,,,,60,-260,,
-Willows,54,42,Willow,2,2,8,,,,,,,60,-260,,
-Open water - Shallow,55,0,,,4,,,,,,,,,,,
-Open water - Deep,56,0,,,4,,,,,,,,,,,
-Open water - Stock,57,0,,,4,,,,,,,,,,,
-Cotton,-58,43,Cotton,1,2,20.32,,-12.5,800,1950,30,160,,,,
-Peppers,-59,44,Peppers,1,2,19,,-10,1490,2280,10,140,,,,
-Sorghum,-60,45,Sorghum,3,2,20.2,,-7,,,,,35,105,20,160
-Olives,61,47,Olives,3,3,0,1,,,,,,60,-100,0,250
-Strawberries,-62,48,Strawberries,1,1,600,,0,1400,4000,20,160,,,,
-Blueberries,63,49,Blueberries,3,3,0,1,,,,,,60,-100,20,220
-Raspberries,64,50,Raspberries,3,3,0,1,,,,,,60,-100,20,220
-Rice,-65,51,Rice,1,2,15,,0,880,2190,10,240,,,,
-Soybeans,-66,52,"Snap Beans, seed",1,2,21.27,,5,850,2000,0,120,,,,
-Peanuts,-67,52,"Snap Beans, seed",1,2,21.27,,5,850,2000,0,120,,,,
-Millet,-68,1,Spring wheat,1,2,21.48,,0,1000,2800,10,160,,,,
-Tomatoes,-69,54,Potatoes Processing,1,2,10.5,,5,900,2100,20,110,,165,,
-Oranges,70,55,Oranges,3,3,,1,,,,,,1,-100,0,120
-Lettuce (Single Crop),-71,56,Lettuce (Single Crop),1,2,11,,0,1000,2300,10,220,,,,
-Lettuce First Planting,-72,56,Lettuce First Planting,1,2,10.5,,0,800,1800,10,220,,,,
-Lettuce Second Planting,-73,56,Lettuce Second Planting,1,2,27,,0,800,2000,10,220,,,,
-Nuts,74,46,Nuts,3,2,11,,,,,,,45,330,20,280
-Cranberries,75,49,Cranberries,3,3,0,1,,,,,,60,-100,20,220
-Sugarcane,-76,58,Sugarcane,1,2,16,,-10,540,1000,30,130,,,,
-Field Corn After Another Crop,-77,8,Field Corn,1,2,19,,-10,540,1400,20,140,,,,
-Sorghum After Another Crop,-78,45,Sorghum After Another Crop,3,2,19,,-7,,,,,60,70,20,160
-Cotton After Another Crop,-79,43,Cotton After Another Crop,1,2,20,,-12.5,800,1800,30,160,,,,
-Cabbage,-80,59,Cabbage,1,2,11,,0,1000,2300,10,220,,,,
-Sudan,-81,13,Alfalfa 1st cycle,1,1,300,,0,1860,3010,0,100,,,,
-Christmas Trees,82,60,Christmas Trees,3,3,0,1,,,,,,1,-100,0,120
-Melons After Another Crop,-83,22,Melons,2,2,27,,,,,,,70,190,10,270
-Grain After Another Crop,-84,1,Grain After Another Crop,3,2,27,,-7,,,,,60,90,10,160
-Soybeans After Another Crop,-85,52,"Snap Beans, seed",1,2,13,,5,755,1690,0,120,,,,
-Grass Pasture (Mid Management),86,61,"Pasture, Mid Manag.",3,2,6.85,,,,,,,50,-220,0,190
-"Turfgrass, Warm",87,62,"Turfgrass, Warm",4,2,10.5,,,,,,,60,-270,0,270
-"Turfgrass, Cool",88,63,"Turfgrass, Cool",4,2,10.5,,,,,,,60,-270,0,270
-"Turfgrass, Intermediate",89,64,"Turfgrass, Cool",4,2,10.5,,,,,,,60,-270,0,270
+Parameter,Crop number and flag for crop type,Crop curve number,Crop curve name,Crop curve type,Flag for means to estimate pl or gu,T30 for pl or gu   or CGDD for pl or gu,Date of pl or gu  (can be blank),For NCGDD based curves: Tbase:,CGDD for EFC,CGDD for termination,NCGDD for development,NCGDD for late season,time for EFC (days after pl or gu),time for harvest (neg to extend until frost),Time percent to EFC for development,Time percent to EFC for late season,Days after EFC for late season
+Alfalfa Hay - (typical style),1,13,Alfalfa 1st cycle,1,1,310,,0,900,850,0,100,,-240,,,
+Alfalfa Hay - frequent dairy style ~4 cuttings,2,13,Alfalfa 1st cycle,1,1,240,,0,700,650,0,100,,-240,,,
+Alfalfa Hay,3,13,Alfalfa 1st cycle,1,1,370,,0,850,1000,0,100,,-240,,,
+Grass Hay,4,19,Grass Hay,1,2,12,,0,1300,4500,0,100,,-250,,,
+Snap and Dry Beans - fresh,-5,12,"Snap Beans, fresh",1,2,13,,5,670,1200,0,120,,,,,
+Snap and Dry Beans - seed,-6,11,"Snap Beans, seed",1,2,21.27,,5,670,1350,0,120,,,,,
+Field Corn (moderate lengthed season),-7,8,Field Corn,1,2,15.09,,-10,700,1750,20,140,,210,,,
+Silage Corn (field corn but with truncated season),-8,9,Sileage Corn,1,2,13,,-10,500,1100,20,140,,210,,,
+Sweet Corn -- early,-9,10,Sweet Corn,1,2,14.43,,-10,600,1100,20,110,,210,,,
+Sweet Corn -- late,-10,10,Sweet Corn,1,2,12,,-10,500,1000,20,110,,210,,,
+Spring Grain - Irrigated,-11,1,Spring wheat,1,2,7,,0,880,2040,10,160,,210,,,
+Spring Grain - Rainfed,-12,1,Spring wheat,1,2,5,,0,800,2050,10,160,,210,,,
+Winter Grain - Irrigated,-13,2,Winter Wheat,1,3,,10,0,1150,2000,10,130,,,,,
+Winter Grain - Rainfed,-14,2,Winter Wheat,1,3,,10,0,1100,1800,10,130,,,,,
+Grass Pasture (High Management),15,30,"Pasture, Rotated",3,2,10,,,,,,,50,-220,0,,80
+Grass Pasture (Low Management),16,31,"Pasture, Low Manag.",3,2,6.85,,,,,,,50,-220,0,,70
+Turfgrass (lawns) - Irrig.,17,29,Lawn,2,2,10,,,,,,,60,-270,0,270,
+Turfgrass (lawns) - Rainfed,18,29,Lawn,2,2,10,,,,,,,60,-270,0,270,
+Orchards - Apples and Cherries w/ground cover,19,24,"Apples, GC",2,2,8,,,,,,,130,320,0,210,
+Orchards - Apples and Cherries no ground cover,20,25,"Apples, no GC",2,2,8,,,,,,,130,320,10,210,
+Garden Vegetables (general),-21,20,Onions,2,2,10,,,,,,,80,200,20,160,
+Carrots,-22,20,Onions,2,2,9,,,,,,,80,200,20,160,
+Onions,-23,20,Onions,2,2,19,,,,,,,70,205,20,160,
+Melons,-24,22,Melons,2,2,21,,,,,,,70,190,10,270,
+Grapes--wine,25,21,Winegrapes,2,2,10.5,,,,,,,120,180,0,180,
+Alfalfa Seed,26,33,Alfalfa Seed,3,1,240,,0,,,,,80,100,0,,30
+Peas--fresh,-27,4,"Peas, fresh",1,2,10.5,,0,637,1300,0,120,,,,,
+Peas--seed,-28,3,"Peas, seed",1,2,21.27,,0,800,2200,0,120,,,,,
+Potatoes - processing (early harvest),-29,7,Potatoes Processing,1,2,10.5,,5,800,1600,20,110,,,,,
+Potatoes - baking (late harvest),-30,6,Potatoes - Late (baking),1,2,10.5,,5,800,2150,20,120,,,,,
+Sugar beets,-31,5,Sugar Beets,1,2,11,,0,970,2700,10,130,,,,,
+Hops,32,23,Hops,2,1,600,,0,,,,,100,200,20,130,
+Mint,33,18,Mint,1,1,600,,0,1400,4000,0,100,,,,,
+Poplar (third year and older),34,34,Poplar,3,2,10.5,,,,,,,21,-200,0,,80
+Lentils,-35,17,Lentils,1,2,10.5,,0,935,2160,10,160,,,,,
+Sunflower - Irrigated,-36,28,Sunflower/Safflower,2,2,21.09,,,,,,,70,190,20,130,
+Sunflower - Rainfed,-37,28,Sunflower/Safflower,2,2,13.5,,,,,,,70,190,20,130,
+Safflower - Irrigated,-38,28,Sunflower/Safflower,2,2,11,,,,,,,70,190,20,130,
+Safflower - Rainfed,-39,28,Sunflower/Safflower,2,2,11,,,,,,,70,190,20,130,
+Canola,40,27,Canola,2,2,8,,,,,,,55,170,20,130,
+Mustard,-41,27,Mustard,2,3,11,4.83,,,,,,55,190,20,130,
+BlueGrass Seed,42,32,BlueGrass Seed,3,2,10.5,,,,,,,35,-230,0,,20
+Garlic,-43,26,Garlic,2,2,10,,,,,,,80,170,20,140,
+Bare soil,44,0,,0,4,,,,,,,,,,,,
+Mulched soil / wheat stubble,45,0,,0,4,,,,,,,,,,,,
+Dormant turf/sod (winter time),46,0,,0,4,,,,,,,,,,,,
+Range Grasses- early short season (cheat etc.),47,38,cheatgrass,4,2,10.5,-10,,,,,,,,,,
+"Range Grasses- long season (bunch - wheatgrass, etc.)",48,39,bunchgrass,4,2,10.5,-10,,,,,,,,,,
+Range Grasses - brome grass,49,40,Bromegrass,4,2,10.5,-10,,,,,,,,,,
+Sagebrush,50,37,Sage,4,2,10.5,-10,,,,,,,,,,
+Wetlands--large stands,51,35,"Wetlands, Large Stand",3,2,15,,,,,,,45,-200,0,,210
+Wetlands--narrow stands,52,36,"Wetlands, Small Stand",3,2,15,,,,,,,45,-200,0,,210
+Cottonwoods,53,41,Cottonwood,2,2,8,,,,,,,60,-260,0,,100
+Willows,54,42,Willow,2,2,8,,,,,,,60,-260,10,,100
+Open water - Shallow,55,0,,,4,,,,,,,,,,,,
+Open water - Deep,56,0,,,4,,,,,,,,,,,,
+Open water - Stock,57,0,,,4,,,,,,,,,,,,
+Cotton,-58,43,Cotton,1,2,20.32,,-12.5,800,1950,30,160,,,,,
+Peppers,-59,44,Peppers,1,2,19,,-10,1490,2280,10,140,,,,,
+Sorghum,-60,45,Sorghum,3,2,20.2,,-7,,,,,35,105,20,,50
+Olives,61,47,Olives,3,3,0,1,,,,,,60,-100,0,,100
+Strawberries,-62,48,Strawberries,1,1,600,,0,1400,4000,20,160,,,,,
+Blueberries,63,49,Blueberries,3,3,0,1,,,,,,60,-100,20,,110
+Raspberries,64,50,Raspberries,3,3,0,1,,,,,,60,-100,20,,110
+Rice,-65,51,Rice,1,2,15,,0,880,2190,10,240,,,,,
+Soybeans,-66,52,"Snap Beans, seed",1,2,21.27,,5,850,2000,0,120,,,,,
+Peanuts,-67,52,"Snap Beans, seed",1,2,21.27,,5,850,2000,0,120,,,,,
+Millet,-68,1,Spring wheat,1,2,21.48,,0,1000,2800,10,160,,,,,
+Tomatoes,-69,54,Potatoes Processing,1,2,10.5,,5,900,2100,20,110,,165,,,
+Oranges,70,55,Oranges,3,3,,1,,,,,,1,-100,0,,10
+Lettuce (Single Crop),-71,56,Lettuce (Single Crop),1,2,11,,0,1000,2300,10,220,,,,,
+Lettuce First Planting,-72,56,Lettuce First Planting,1,2,10.5,,0,800,1800,10,220,,,,,
+Lettuce Second Planting,-73,56,Lettuce Second Planting,1,2,27,,0,800,2000,10,220,,,,,
+Nuts,74,46,Nuts,3,2,11,,,,,,,45,330,20,,170
+Cranberries,75,49,Cranberries,3,3,0,1,,,,,,60,-100,20,,110
+Sugarcane,-76,58,Sugarcane,1,2,16,,-10,540,1000,30,130,,,,,
+Field Corn After Another Crop,-77,8,Field Corn,1,2,19,,-10,540,1400,20,140,,,,,
+Sorghum After Another Crop,-78,45,Sorghum After Another Crop,3,2,19,,-7,,,,,60,70,20,,50
+Cotton After Another Crop,-79,43,Cotton After Another Crop,1,2,20,,-12.5,800,1800,30,160,,,,,
+Cabbage,-80,59,Cabbage,1,2,11,,0,1000,2300,10,220,,,,,
+Sudan,-81,13,Alfalfa 1st cycle,1,1,300,,0,1860,3010,0,100,,,,,
+Christmas Trees,82,60,Christmas Trees,3,3,0,1,,,,,,1,-100,0,,10
+Melons After Another Crop,-83,22,Melons,2,2,27,,,,,,,70,190,10,270,
+Grain After Another Crop,-84,1,Grain After Another Crop,3,2,27,,-7,,,,,60,90,10,,50
+Soybeans After Another Crop,-85,52,"Snap Beans, seed",1,2,13,,5,755,1690,0,120,,,,,
+Grass Pasture (Mid Management),86,61,"Pasture, Mid Manag.",3,2,6.85,,,,,,,50,-220,0,,80
+"Turfgrass, Warm",87,62,"Turfgrass, Warm",4,2,10.5,,,,,,,60,-270,0,270,
+"Turfgrass, Cool",88,63,"Turfgrass, Cool",4,2,10.5,,,,,,,60,-270,0,270,
+"Turfgrass, Intermediate",89,64,"Turfgrass, Cool",4,2,10.5,,,,,,,60,-270,0,270,

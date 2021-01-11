@@ -15,11 +15,10 @@ import sys
 from osgeo import gdal, ogr
 
 import src.prep._gdal_common as gdc
-import src.prep._util as util
-from src.config.config_prep import cfg_prep
+from src.config.config_prep import cfg_prep, crop_et_config
 
 
-def main(overwrite_flag=False):
+def clip_cdl_to_gages(cfg_prep_used, overwrite_flag=False):
     """Clip CDL rasters to a target extent and rebuild color table
 
     Parameters
@@ -37,7 +36,7 @@ def main(overwrite_flag=False):
     If the CDL raster is already in this folder, it will be overwritten.
 
     """
-    config = copy.deepcopy(cfg_prep)
+    config = copy.deepcopy(cfg_prep_used)
     zones_path = config.CROP_ET.cells_path
     gis_ws = config.CROP_ET.gis_folder
     cdl_input_ws = config.USDA.cdl_folder
@@ -45,11 +44,9 @@ def main(overwrite_flag=False):
     cdl_format = config.USDA.cdl_format
 
     cdl_output_ws = os.path.join(gis_ws, 'cdl')
-    # TODO: cdl_output_ws, cdl_output_path may need to be modified for different GAGES-II regions
-    cdl_input_path = os.path.join(
-        cdl_input_ws, cdl_format.format(cdl_year, 'img'))
-    cdl_output_path = os.path.join(
-        cdl_output_ws, cdl_format.format(cdl_year, 'img'))
+    # cdl_output_ws, cdl_output_path need to be modified for different GAGES-II regions in the config files
+    cdl_input_path = os.path.join(cdl_input_ws, cdl_format.format(cdl_year, 'img'))
+    cdl_output_path = os.path.join(cdl_output_ws, cdl_format.format(cdl_year, 'img'))
 
     # Keep the CDL raster in the default IMG format
     output_format = 'HFA'
@@ -70,14 +67,10 @@ def main(overwrite_flag=False):
 
     # Check input folders
     if not os.path.isfile(zones_path):
-        logging.error(
-            '\nERROR: The ET zone shapefile doesn\'t exist, exiting\n'
-            '  {}'.format(zones_path))
+        logging.error('\nERROR: The ET zone shapefile doesn\'t exist, exiting\n {}'.format(zones_path))
         sys.exit()
     elif not os.path.isfile(cdl_input_path):
-        logging.error(
-            '\nERROR: The input CDL raster doesn\'t exist, exiting\n'
-            '  {}'.format(cdl_input_path))
+        logging.error('\nERROR: The input CDL raster doesn\'t exist, exiting\n {}'.format(cdl_input_path))
         sys.exit()
 
     if not os.path.isdir(cdl_output_ws):
@@ -88,8 +81,7 @@ def main(overwrite_flag=False):
     logging.info('CDL Output Path: {}'.format(cdl_output_path))
 
     if cdl_input_path == cdl_output_path:
-        logging.error('\nThe script does not currently handle clipping the '
-                      'CDL raster in place, exiting')
+        logging.error('\nThe script does not currently handle clipping the CDL raster in place, exiting')
         sys.exit()
 
     # CDL Raster Properties
@@ -115,7 +107,8 @@ def main(overwrite_flag=False):
     zones_extent = gdc.feature_lyr_extent(zones_lyr)
     zones_ds = None
     logging.debug('\nET Zones Shapefile Properties')
-    # TODO: when debugging always unexpectedly stop, I think the reason is that raster data so large that out of memory
+    # TODO: when debugging always unexpectedly stop, but when running, there is no error
+    # I think maybe the reason is that raster data so large that out of memory
     logging.debug('  Extent:     {}'.format(zones_extent))
     logging.debug('  Projection: {}'.format(zones_osr.ExportToWkt()))
     # logging.debug('  OSR:    {}'.format(zones_osr))
@@ -127,8 +120,7 @@ def main(overwrite_flag=False):
     logging.debug('  Projected:  {}'.format(clip_extent))
     # Adjust the clip extent to the CDL snap point and cell size
     clip_extent.buffer(10 * cdl_cs)
-    clip_extent.adjust_to_snap(snap_x=cdl_x, snap_y=cdl_y, cs=cdl_cs,
-                               method='EXPAND')
+    clip_extent.adjust_to_snap(snap_x=cdl_x, snap_y=cdl_y, cs=cdl_cs, method='EXPAND')
     logging.debug('  Snapped:    {}'.format(clip_extent))
     # Limit the subset extent to CDL extent
     clip_extent.clip(clip_extent)
@@ -216,4 +208,7 @@ if __name__ == '__main__':
     logging.info(log_f.format('Current Directory:', os.getcwd()))
     logging.info(log_f.format('Script:', os.path.basename(sys.argv[0])))
 
-    main(overwrite_flag=args.overwrite)
+    region_name = "some_from_all4test"
+    cfg_prep_new = crop_et_config(cfg_prep, region_name)
+
+    clip_cdl_to_gages(cfg_prep_new, overwrite_flag=args.overwrite)
