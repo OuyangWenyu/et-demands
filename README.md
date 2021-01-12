@@ -35,7 +35,7 @@ conda activate etdemands
 修改时基本步骤如下：
 
 1. 下载各类型数据：USDA CDL 数据，GAGES-II流域数据，NOAA RefET数据（现在换成GRIDMET forcing数据），usbr/et-demands 预处理好的 STATSGO 数据。
-2. 预处理数据为crop ET（ETc） 计算可用数据：流域内统计计算，并生成一些必要的静态文件。
+2. 预处理数据为crop ET（ETc） 计算可用数据：流域内统计计算（以GEE版本为主），并生成一些必要的静态文件。
 3. 基于 usbr/et-demands 的方法计算 ETc
 4. 后处理：绘图、统计等以验证自己计算无错。
 
@@ -57,7 +57,12 @@ conda activate etdemands
 7. 把 build_static_files_for_gages.py 
 8. 计算cropet：调用 src/cropet4gages/gages_crop_et.py 计算
 
-但是上述过程还是会碰到数据过大的情况，所以还是使用 GEE 的结果来进行计算了。
+但是上述过程还是会碰到数据过大的情况，所以还是使用 GEE 的结果来进行计算了。以下是GEE
+
+1. 和上面的前三步一样，下载并准备数据；此外，还需要把自己在GEE上处理的 作物面积数据 下载到 examples/common/usda_cdl 文件夹里
+2. 用 src/prep/preprocess4gages/et_demands_gages_region_stats.py 里的代码，用GEE模式的code，把上面的统计信息加入到shpfile中
+3. 跑一下 build_static_files_for_gages.py 生成静态文件
+4. 运行 src/cropet4gages/gages_crop_et.py 计算 crop ET
 
 #### Multiprocessing
 

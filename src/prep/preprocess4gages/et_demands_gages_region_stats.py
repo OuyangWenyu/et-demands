@@ -9,9 +9,9 @@ from collections import defaultdict
 import datetime as dt
 import logging
 import os
-import pprint
+import geopandas as gpd
 import sys
-
+import numpy as np
 from osgeo import ogr, osr
 import pandas as pd
 import rtree
@@ -20,7 +20,6 @@ from shapely.wkt import loads
 
 from src.config.config_prep import cfg_prep, crop_et_config
 import src.prep._gdal_common as gdc
-import src.prep._util as util
 from src.prep import _arcpy
 
 
@@ -594,6 +593,124 @@ def arg_parse():
     return args
 
 
+def generate_zonal_statistics(cfg_prep_new):
+    """把GEE的crop面积结果加入到region的shpfile中生成新的shpfile"""
+    gis_folder = cfg_prep_new.CROP_ET.gis_folder
+    cdl_year = cfg_prep_new.USDA.cdl_year
+    if not os.path.isdir(gis_folder):
+        os.makedirs(gis_folder)
+    input_shpfile = cfg_prep_new.CROP_ET.cells_path
+    output_shpfile_tmp = os.path.join(gis_folder, "tmp_file.shp")
+    output_shpfile = cfg_prep_new.CROP_ET.crop_path
+    _arcpy.copy(input_shpfile, output_shpfile_tmp)
+    # 首先要把shpfile对应到哪些文件得找出来。这地方会有个warning，但是我不在这里再做spatial join之类的，所以不要紧
+    sites_shp = gpd.read_file(input_shpfile).sort_values(by='GAGE_ID')
+    sites_id = sites_shp['GAGE_ID'].values
+    gage_classif_file = cfg_prep.GAGES.basin_classif_file
+    data_all = pd.read_csv(gage_classif_file, sep=',', dtype={0: str}, usecols=range(0, 3))
+    all_sites_id = data_all.iloc[:, 0].values
+    assert (all(x < y for x, y in zip(all_sites_id, all_sites_id[1:])))
+    all_regions = data_all[data_all['STAID'].isin(sites_id)]['AGGECOREGION']
+    all_isref = data_all[data_all['STAID'].isin(sites_id)]['CLASS']
+    region_lst = np.unique(["class_area_by_basins_of_allref_" + str(
+        cdl_year) if y == 'Ref' else "class_area_by_basins_of_" + x + "_" + str(cdl_year) for x, y in
+                            zip(all_regions.values, all_isref.values)])
+    crop_area_files = [os.path.join(cfg_prep.USDA.cdl_folder, region_tmp + ".csv") for region_tmp in region_lst]
+    crop_areas_lst = []
+    gdf_lst = []
+    # 循环第一遍，判断指定的各个site_id一共对应哪些crop（即面积不为nan的），这样可以把剩下没用的都删掉（因为nan的还是蛮多的）
+    for ca_file in crop_area_files:
+        crop_areas = pd.read_csv(ca_file, dtype={0: str}).sort_values(by="GAGE_ID")
+        sites_this_region, ind1, ind2 = np.intersect1d(crop_areas["GAGE_ID"].values, sites_id, return_indices=True)
+        crop_areas_lst.append(crop_areas.iloc[ind1, :])
+    crop_areas_df = pd.concat(crop_areas_lst).sort_values(by="GAGE_ID")
+    is_all_nan = crop_areas_df.apply(lambda x: all(pd.isna(x)), axis=0)
+    crop_areas_nonan = crop_areas_df.drop(is_all_nan[is_all_nan == True].index, axis=1)
+
+    # 接下来，循环第二遍，开始生成计算需要的shpfile，要把刚刚生成的crop 字段加入到shape里面
+    crop_field_list = ['CROP_{:03d}'.format(int(idx_str)) for idx_str in crop_areas_nonan.columns if
+                       idx_str != "GAGE_ID"]
+    zone_field_list = _arcpy.list_fields(output_shpfile_tmp)
+    for crop_field in crop_field_list:
+        if crop_field not in zone_field_list:
+            logging.debug('  Field: {}'.format(crop_field))
+            _arcpy.add_field(output_shpfile_tmp, crop_field, ogr.OFTReal)
+    newdata = gpd.read_file(output_shpfile_tmp)
+    sqm_2_acres = 0.000247105381
+    for i in range(len(crop_field_list)):
+        one_col = crop_areas_nonan[crop_areas_nonan.columns[i + 1]]
+        # 平方米转平方mile，给后面保持一致
+        newdata[crop_field_list[i]] = one_col.values * sqm_2_acres
+
+    # 把其他的field也加进来，暂时不用赋值，因为后面也不用
+    newdata.to_file(output_shpfile)
+
+    cell_lat_field = 'LAT'
+    cell_lon_field = 'LON'
+    # cell_id_field = 'CELL_ID'
+    # cell_name_field = 'CELL_NAME'
+    # cell_station_id_field = 'STATION_ID'
+    acreage_field = 'AG_ACRES'
+    awc_field = 'AWC'
+    clay_field = 'CLAY'
+    sand_field = 'SAND'
+    awc_in_ft_field = 'AWC_IN_FT'
+    hydgrp_num_field = 'HYDGRP_NUM'
+    hydgrp_field = 'HYDGRP'
+
+    # Add lat/lon fields
+    logging.info('\nAdding Fields')
+    zone_field_list = _arcpy.list_fields(output_shpfile)
+    if cell_lat_field not in zone_field_list:
+        logging.debug('  {}'.format(cell_lat_field))
+        _arcpy.add_field(output_shpfile, cell_lat_field, ogr.OFTReal)
+    if cell_lon_field not in zone_field_list:
+        logging.debug('  {}'.format(cell_lon_field))
+        _arcpy.add_field(output_shpfile, cell_lon_field, ogr.OFTReal)
+
+    # Add soil fields
+    if awc_field not in zone_field_list:
+        logging.debug('  {}'.format(awc_field))
+        _arcpy.add_field(output_shpfile, awc_field, ogr.OFTReal)
+    if clay_field not in zone_field_list:
+        logging.debug('  {}'.format(clay_field))
+        _arcpy.add_field(output_shpfile, clay_field, ogr.OFTReal)
+    if sand_field not in zone_field_list:
+        logging.debug('  {}'.format(sand_field))
+        _arcpy.add_field(output_shpfile, sand_field, ogr.OFTReal)
+    if awc_in_ft_field not in zone_field_list:
+        logging.debug('  {}'.format(awc_in_ft_field))
+        _arcpy.add_field(output_shpfile, awc_in_ft_field, ogr.OFTReal,
+                         width=8, precision=4)
+    if hydgrp_num_field not in zone_field_list:
+        logging.debug('  {}'.format(hydgrp_num_field))
+        _arcpy.add_field(output_shpfile, hydgrp_num_field, ogr.OFTInteger)
+    if hydgrp_field not in zone_field_list:
+        logging.debug('  {}'.format(hydgrp_field))
+        _arcpy.add_field(output_shpfile, hydgrp_field, ogr.OFTString, width=1)
+
+    if acreage_field not in zone_field_list:
+        logging.debug('  {}'.format(acreage_field))
+        _arcpy.add_field(output_shpfile, acreage_field, ogr.OFTReal)
+
+    # 下面这些都是为了让后面代码能跑通，所以能算的还是算一下
+    logging.info('\nCalculating ET zone lat/lon')  # (central point lat/lon of a basin polygon)
+    cell_lat_lon_func(output_shpfile, cell_lat_field, cell_lon_field)
+
+    # 剩下的不太好算，所以直接忽略了，反正后面计算也用不到
+    final_data = gpd.read_file(output_shpfile)
+    # 给后来加入的这些field赋值，先随意给定，因为后面这些我都没用到，关键是让程序跑通
+    sites_len = final_data.shape[0]
+    final_data[awc_field] = np.full(sites_len, 0.1)
+    final_data[clay_field] = np.full(sites_len, 20.0)
+    final_data[sand_field] = np.full(sites_len, 30.0)
+    final_data[awc_in_ft_field] = np.full(sites_len, 1.0)
+    final_data[hydgrp_num_field] = np.full(sites_len, 1)
+    final_data[hydgrp_field] = np.full(sites_len, 'A')
+    final_data[acreage_field] = final_data[crop_field_list].apply(lambda x: np.nansum(x), axis=1).values
+    final_data.to_file(input_shpfile)
+
+
 if __name__ == '__main__':
     args = arg_parse()
 
@@ -603,8 +720,10 @@ if __name__ == '__main__':
     logging.info('{0:<20s} {1}'.format('Current Directory:', os.getcwd()))
     logging.info('{0:<20s} {1}'.format('Script:', os.path.basename(sys.argv[0])))
 
-    shp_file_name = 'bas_ref_all.shp'
-    chosen_id_idx = [0, 10]
-    cfg_prep_new = crop_et_config(cfg_prep, shp_file_name, chosen_id_idx)
+    region_name = 'some_from_all4test'
+    cfg_prep_new = crop_et_config(cfg_prep, region_name)
 
-    cal_zonal_statistics(cfg_prep_new, overwrite_flag=args.overwrite)
+    # for GEE file
+    generate_zonal_statistics(cfg_prep_new)
+    # non-GEE mode
+    # cal_zonal_statistics(cfg_prep_new, overwrite_flag=args.overwrite)

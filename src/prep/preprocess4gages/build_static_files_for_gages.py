@@ -179,9 +179,9 @@ def build_static_files(cfg_prep_used, area_threshold=0.25, beef_cuttings=4, dair
         basin_data_dict[cell_id_tmp][basin_elev_field] = \
             basin_topo.loc[basin_topo[basin_id_filed] == cell_id_tmp, basin_elev_field].values[0]
     # Convert elevation units if necessary
-    # logging.debug('  Convert station elevation from meters to feet')
-    # for k in basin_data_dict.keys():
-    #     basin_data_dict[k][basin_elev_field] /= 0.3048
+    logging.debug('  Convert station elevation from meters to feet')
+    for k in basin_data_dict.keys():
+        basin_data_dict[k][basin_elev_field] /= 0.3048
 
     # static files
     logging.info('\nCopying template static files')
@@ -284,8 +284,7 @@ if __name__ == '__main__':
     logging.info('{0:<20s} {1}'.format(
         'Script:', os.path.basename(sys.argv[0])))
 
-    shp_file_name = 'bas_ref_all.shp'
-    chosen_id_idx = [0, 10]
-    cfg_prep_new = crop_et_config(cfg_prep, shp_file_name, chosen_id_idx)
+    region = "some_from_all4test"
+    cfg_prep_new = crop_et_config(cfg_prep, region)
     build_static_files(cfg_prep_new, area_threshold=args.acres, dairy_cuttings=args.dairy, beef_cuttings=args.beef,
                        overwrite_flag=args.overwrite)

@@ -350,8 +350,7 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-    shp_file_name = 'bas_ref_all.shp'
-    chosen_id_idx = [0, 10]
-    cfg_prep_new = crop_et_config(cfg_cet, shp_file_name, chosen_id_idx)
+    region = "some_from_all4test"
+    cfg_prep_new = crop_et_config(cfg_cet, region)
     crop_et_model(cfg_prep_new, log_level=args.log_level, etcid_to_run=args.etcid, cal_flag=args.cal,
                   debug_flag=args.debug, mp_procs=args.multiprocessing)
