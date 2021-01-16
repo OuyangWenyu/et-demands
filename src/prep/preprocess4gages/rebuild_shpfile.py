@@ -1,5 +1,5 @@
 """split a shapefile to multiple ones or """
-import copy
+import json
 import logging
 import os
 import numpy as np
@@ -66,8 +66,14 @@ def merge_shpfile(gdf_lst_input, output_shpfile, write_flag=True):
 
 
 if __name__ == '__main__':
-    region_name = "some_from_all4test"
-    sites_id = ["01013500", "01017000", "05592575"]
+    # region_name = "some_from_irrigation"
+    region_name = "some_from_3557"
+    # sites_id = ["01013500", "01017000", "05592575"]
+    # sites_id = pd.read_csv("irrigation_gage_id.csv", dtype={0: str}).sort_values(by="GAGE_ID")[
+    #     "GAGE_ID"].values.tolist()
+    with open("dictTimeSpace.json", 'r') as fp:
+        all_sites_json = json.load(fp)
+    sites_id = all_sites_json["sites_id"]
     output_folder = os.path.join(cfg_prep.DATA_ROOT_DIR, region_name)
     if not os.path.isdir(output_folder):
         os.makedirs(output_folder)

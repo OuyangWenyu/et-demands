@@ -284,7 +284,8 @@ if __name__ == '__main__':
     logging.info('{0:<20s} {1}'.format(
         'Script:', os.path.basename(sys.argv[0])))
 
-    region = "some_from_all4test"
+    # region = "some_from_irrigation"
+    region = "some_from_3557"
     cfg_prep_new = crop_et_config(cfg_prep, region)
     build_static_files(cfg_prep_new, area_threshold=args.acres, dairy_cuttings=args.dairy, beef_cuttings=args.beef,
                        overwrite_flag=args.overwrite)

@@ -350,7 +350,8 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-    region = "some_from_all4test"
+    # region = "some_from_irrigation"
+    region = "some_from_3557"
     cfg_prep_new = crop_et_config(cfg_cet, region)
     crop_et_model(cfg_prep_new, log_level=args.log_level, etcid_to_run=args.etcid, cal_flag=args.cal,
                   debug_flag=args.debug, mp_procs=args.multiprocessing)

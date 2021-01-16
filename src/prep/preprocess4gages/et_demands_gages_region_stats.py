@@ -720,7 +720,8 @@ if __name__ == '__main__':
     logging.info('{0:<20s} {1}'.format('Current Directory:', os.getcwd()))
     logging.info('{0:<20s} {1}'.format('Script:', os.path.basename(sys.argv[0])))
 
-    region_name = 'some_from_all4test'
+    # region_name = 'some_from_irrigation'
+    region_name = 'some_from_3557'
     cfg_prep_new = crop_et_config(cfg_prep, region_name)
 
     # for GEE file

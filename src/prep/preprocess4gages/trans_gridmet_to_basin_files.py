@@ -128,7 +128,8 @@ if __name__ == "__main__":
         for region_tmp in regions_str:
             trans_all_forcing_file_to_camels(t_range, region_tmp)
     else:
-        region_name = "some_from_all4test"
+        # region_name = "some_from_irrigation"
+        region_name = "some_from_3557"
 
         project_folder = os.path.join(cfg_prep.DATA_ROOT_DIR, region_name)
         cells_path = os.path.join(project_folder, region_name + '.shp')
